@@ -1,0 +1,24 @@
+{{ define "nav" }}
+    <a class="breadcrumb-item" href="#">{{ .Title }}</a>
+{{ end }}
+
+{{ define "main" }}
+
+    <div class="section-header">
+        <h1 class="display-4">{{ .Title }}</h1>
+        <p class="lead mt-3">{{ .Description }}</p>
+        <div class="mt-4">
+            {{ .Content }}
+        </div>
+    </div>
+
+    <div class="item-grid">
+        {{ range .Pages }}
+            <a href="{{ .RelPermalink }}" class="item-tile">
+                <img src="{{ urls.RelURL (add "img/" .Params.image) }}" alt="Lab image">
+                <div>{{ .Title }}</div>
+            </a>
+        {{ end }}
+    </div>
+
+{{ end }}

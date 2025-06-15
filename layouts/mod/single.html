@@ -1,0 +1,39 @@
+{{ define "nav" }}
+    <a class="breadcrumb-item" href="../..">{{ .Parent.Title }}</a>
+    <a class="breadcrumb-item" href="#">{{ .Title }}</a>
+{{ end }}
+
+{{ define "main" }}
+
+    <div class="section-header">
+        <h1 class="display-4">{{ .Title }}</h1>
+        <p class="lead mt-3">{{ .Description }}</p>
+    </div>
+
+    {{ if .Params.more }}
+    <div id="moreInfo" class="alert alert-info mt-3" role="alert">
+        <p><i class="bi-info-square-fill mr-1"></i> {{ .Params.more }}</p>
+        <a class="btn btn-success ml-auto" href="{{ .Params.link }}">{{ .Params.learn }} <i class="bi-mortarboard ml-1"></i></a>
+    </div>
+    {{ end }}
+
+    <div class="mt-4">
+        {{ .Content }}
+    </div>
+
+    {{ $lessons := sort .Pages "Params.sortkey" }}
+    {{ $firstLesson := index $lessons 0 }}
+
+    <div class="alert bg-white border mt-3" role="warning">
+        {{ range $lessons }}
+        <p class="fw-bolder">
+            <a href="{{ .RelPermalink }}" class="text-reset"><i class="bi-file-text mr-1"></i> {{ .Title }}</a>
+        </p>
+        {{ end }}
+    </div> 
+    
+    <div class="d-flex justify-content-between mt-4">
+        <a class="btn btn-primary" href="{{ $firstLesson.RelPermalink }}">Start The Lab <i class="bi-caret-right"></i></a>
+    </div>
+
+{{ end }}

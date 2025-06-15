@@ -1,0 +1,17 @@
+baseURL = "http://localhost:1313/"
+languageCode = "en-us"
+title = "MarkUp Labs"
+
+[markup]
+
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+    [markup.goldmark.parser]
+      wrapStandAloneImageWithinParagraph = false
+      [markup.goldmark.parser.attribute]
+        block = true
+  
+  [markup.highlight]
+    style = "catppuccin-latte"
