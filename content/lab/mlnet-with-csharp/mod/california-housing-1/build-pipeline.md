@@ -11,7 +11,7 @@ Now let's start designing the ML.NET data transformation pipeline. This is the s
 
 After completing the previous lessons, you should have a pretty good idea which feature engineering steps are needed to get this dataset ready for machine learning training.
 
-Homework: write down all feature engineering steps you want to perform on the California Housing dataset, in order.
+Write down all feature engineering steps you want to perform on the California Housing dataset, in order.
 { .homework }
 
 Here are some steps you could consider:

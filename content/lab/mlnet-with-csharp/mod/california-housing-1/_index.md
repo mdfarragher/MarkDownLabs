@@ -3,7 +3,8 @@ title: "California Housing - Part 1"
 description: "Process a dataset with house prices across California neighborhoods"
 type: "mod"
 layout: "single"
-image: ml-learn.jpg
+image: mod-calhousing-1.jpg
+sortKey: 20
 ---
 In this lab, you're going to write an app in C# that use feature engineering to process the data in a machine learning dataset.
 

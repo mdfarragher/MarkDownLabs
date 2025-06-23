@@ -141,10 +141,5 @@ pre {
 
 /* Custom styles for unordered lists */
 ul {
-  list-style-type: none;
-}
-
-ul li::before {
-  content: "-";
-  margin-right: 0.5em;
+  list-style-type: "- ";
 }
