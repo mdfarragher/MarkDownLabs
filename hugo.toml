@@ -1,6 +1,6 @@
-baseURL = "http://localhost:1313/"
+baseURL = "https://labs.mdft.academy/"
 languageCode = "en-us"
-title = "MarkUp Labs"
+title = "MarkUp Labs by MDFT Pro"
 
 [markup]
 
