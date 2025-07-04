@@ -2,8 +2,12 @@ baseURL = "https://labs.mdft.academy/"
 languageCode = "en-us"
 title = "MarkUp Labs by MDFT Pro"
 
-[markup]
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
 
+[markup]
+ 
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
