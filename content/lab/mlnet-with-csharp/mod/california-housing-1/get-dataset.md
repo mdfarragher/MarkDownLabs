@@ -54,18 +54,4 @@ dotnet add package Microsoft.ML
 
 **Microsoft.ML** is the Microsoft MLNET machine learning library. We will use it to build all our applications in this course.
 
-If you're using GitHub Copilot or ChatGPT, try prompting:
-
-"Create an empty C# console app that references the Microsoft.ML machine learning library."
-{.prompt}
-
-And then verify the results:
-
-- Does it create the correct project files?
-- Does it reference Microsoft.ML?
-- Did it add any unnecessary files or references?
-- Is anything missing?
-
-We'll keep comparing a manual setup to AI-generated code in this lab—this will help you see the value of knowing what good scaffolding looks like, even when AI is assisting you.
-
 Next, we're going to analyze the dataset and come up with a feature engineering plan.

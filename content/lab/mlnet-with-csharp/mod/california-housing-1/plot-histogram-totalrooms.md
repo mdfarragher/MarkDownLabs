@@ -35,9 +35,9 @@ using ScottPlot;
 
 #### Create a Histogram of total_rooms
 
-Now let's ask our AI agent to write all the code for us.
+Now let's ask Copilot to write the code for us.
 
-At the bottom of the Copilot panel in Visual Studio Code, make sure the AI mode is set to Agent. Then select your favorite model (I like Anthropic Claude 3.7 for coding work).
+At the bottom of the Copilot panel in Visual Studio Code, make sure the AI mode is set to 'Agent'. Then select your favorite model. I like to use GPT 4.1 or Claude 3.7 for coding work.
 
 ![Enable Agent Mode](../img/agent-mode.jpg)
 { .img-fluid .mb-4 .border }
@@ -47,45 +47,9 @@ Now enter the following prompt:
 "Write C# code using ScottPlot to generate a histogram of the total_rooms column from the CSV file."
 { .prompt }
 
-And let the agent write all the code for you.
+And let Copilot write the code for you.
 
-You may get an issue where the agent struggles with the ScottPlot 5 syntax and tries to generate code for earlier versions. You'll get compile errors on the lines that set up the histogram and try to plot it.
-
-This can happen, because agents are trained on data up until a specific cutoff point, and libraries may have changed their APIs after this date. In my testing, I noticed that at the time of this writing (June 2025), Anthropic Claude 3.7 was unaware of the new syntax and would get stuck in a loop trying to fix my code. I had to abort the agent and fix the code manually.
-
-For reference, [this is how to create a histogram In ScottPlot 5](https://www.scottplot.net/cookbook/5.0/Histograms/).
-
-Here is the plotting code I ended up with:
-
-```csharp
-// Convert float array to double array (required by ScottPlot 5)
-double[] doubleData = totalRoomsColumn.Select(x => (double)x).ToArray();
-
-// Create a new plot
-var plot = new Plot();
-
-// Create a histogram
-var hist = ScottPlot.Statistics.Histogram.WithBinCount(10, doubleData);
-
-// Add the bars to the plot
-var barPlot = plot.Add.Bars(hist.Bins, hist.Counts);
-
-// Size each bar slightly less than the width of a bin
-foreach (var bar in barPlot.Bars)
-    bar.Size = hist.FirstBinSize * .8;
-
-// Customize appearance
-plot.Title(title);
-plot.XLabel("Total Rooms");
-plot.YLabel("Frequency");
-
-// Save the plot
-plot.SavePng(outputPath, 600, 400);
-```
-
-Note the first line, it converts the `totalRoomsColumn` (a `float[]` with all the **total_rooms** values) to `double[]`, because ScottPlot histograms can only work with double values.
-
-Another thing you'll want to check is how the code loads the CSV file. The correct approach is to use the method `LoadFromTextFile`, which is part of the Microsoft.ML library.
+A thing you'll want to check is how the generated code loads the CSV file. The correct approach is to use the method `LoadFromTextFile`, which is part of the Microsoft.ML library.
 
 You should see the following data loading code in your project:
 
@@ -137,12 +101,48 @@ public class HousingData
 }
 ```
 
-You can see each column in the dataset implemented as a property, with the correct data type, and annotated with a `LoadColumn` attribute that specifies from which CSV column the data should be loaded.
+Each column in the dataset is implemented as a property, with the correct data type, and annotated with a `LoadColumn` attribute that specifies the corresponding CSV column index, starting from zero.
 
 If instead you get generated code that uses `File.ReadAllLines` or `Microsoft.VisualBasic.FileIO.TextFieldParser` to manually load the CSV file, you may want to adjust your prompt and explicitly ask for code that uses `LoadFromTextFile` to load the data.
 
 We want to keep our code elegant and lean. The Microsoft.ML library has built-in support for loading CSV files, so we don't want to import additional packages that clutter up our codebase.
 { .tip }
+
+You may get an issue where the agent struggles with the ScottPlot 5 syntax and tries to generate code for earlier versions. That code will not compile and you'll get errors for the source lines that set up and plot the histogram.
+
+This can happen, because AI agents are trained on data up until a specific cutoff point, and libraries may have changed their APIs after this date. In my testing, I noticed that at the time of this writing (June 2025), Claude 3.7 was unaware of the new syntax and would get stuck in a loop trying to fix my code. I had to abort the agent and fix the code manually.
+
+For reference, [this is how to create a histogram In ScottPlot 5](https://www.scottplot.net/cookbook/5.0/Histograms/).
+
+Here is the plotting code I ended up with:
+
+```csharp
+// Convert float array to double array (required by ScottPlot 5)
+var doubleData = totalRoomsColumn.Select(x => (double)x).ToArray();
+
+// Create a new plot
+var plot = new Plot();
+
+// Create a histogram
+var hist = ScottPlot.Statistics.Histogram.WithBinCount(10, doubleData);
+
+// Add the bars to the plot
+var barPlot = plot.Add.Bars(hist.Bins, hist.Counts);
+
+// Size each bar slightly less than the width of a bin
+foreach (var bar in barPlot.Bars)
+    bar.Size = hist.FirstBinSize * .8;
+
+// Customize appearance
+plot.Title(title);
+plot.XLabel("Total Rooms");
+plot.YLabel("Frequency");
+
+// Save the plot
+plot.SavePng("histogram.png", 600, 400);
+```
+
+Note the first line, it converts the `totalRoomsColumn` (a `float[]` with all the **total_rooms** values) to `double[]`, because ScottPlot histograms work with double values.
 
 Now let's look at the histogram. It should look like this:
 
@@ -158,21 +158,14 @@ Think about the following:
 Write down which data transformation steps you are going to apply to deal with the outliers in the total_rooms column.
 { .homework }
 
-#### Bonus: Create a Histogram of Every Feature
+#### Create a Histogram of Every Feature
 
 Now let's modify the code to generate histograms for all the columns in the dataset. Enter the following prompt:
 
-"Modify the code so that it creates one large plot with histograms for every column in the dataset."
+"Modify the code so that it creates histograms for every column in the dataset."
 { .prompt }
 
-When I ran this prompt, Claude 3.7 refactored my code to save each histogram in a separate PNG file, and then it added a HTML page to my project that shows all graphs in a nice grid.
-
-But ScottPlot 5 actually has the ability to combine multiple charts into a single plot. However, ,the agent was not able to get the code working correctly, and in the end decided to use this workaround instead.
-
-When reviewing the output of an agent, always make sure you agree with the chosen workarounds. We now have an app that requires a web browser to see some of the charts. Do you agree with that? If not, ask the agent to give you something better.
-{ .tip }
-
-Now let's review the output. You should get something like this:
+You should get something like this:
 
 ![Histogram Of All Columns](../img/all-histograms.png)
 { .img-fluid .mb-4 }

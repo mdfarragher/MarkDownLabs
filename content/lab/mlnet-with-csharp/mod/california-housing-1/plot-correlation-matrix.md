@@ -5,7 +5,7 @@ layout: "default"
 sortkey: 42
 ---
 
-When you train a machine learning model on a dataset, you always have the same challenge: deciding which columns to include in the training.
+When you train a machine learning model on a dataset, you always face the challenge of deciding which columns to include in the training.
 
 You only want to include columns that are uncorrelated with each other. This means that the columns behave independently from one another, and do not increase or decrease together.
 
@@ -16,9 +16,9 @@ In the California Housing dataset, we have two sets of columns that at first gla
 
 Think about it: a housing block with many rooms will probably also have a lot of bedrooms. And a block with a large population will also host many households.
 
-If we find strongly correlated pairs of columns, we can consider training a machine learning model on a single column. Including the other correlated columns is not useful, because they are not independent variables and we would simply be wasting valuable algorithmic memory space.
+If we find strongly correlated pairs of columns, we can consider training a machine learning model on a single column. Including the other correlated columns is not useful, because they are not independent variables and we would be wasting valuable algorithmic memory space.
 
-So let's write some code (= have the agent write it for us) to calculate the correlation matrix.
+So let's write some code (= have Copilot write it for us) to calculate the correlation matrix.
 
 #### Set Up a Code Structure
 
@@ -40,7 +40,7 @@ PrintCorrelationMatrix(matrix, columnNames);
 PlotCorrelationMatrix(matrix, columnNames);
 ```
 
-This creates a nice scaffold for the agent to work with. We set up an array of column names (using reflection), and then call `CalculateCorrelationMatrix` to, well, calculate the correlation matrix. The method is generic so we can reuse it in other projects.
+This creates a nice scaffold for the agent to work with. We set up an array of column names (using reflection), and then call `CalculateCorrelationMatrix` to calculate the Pearson correlation matrix. The method is generic so we can reuse it in other projects.
 
 You may be wondering why we calculate the `columnNames` array at all? It's to ensure that `PrintCorrelationMatrix` and `PlotCorrelationMatrix` use the exact same column list and present the columns in the exact same order.
 
@@ -53,17 +53,17 @@ Now we can ask the agent to implement the `CalculateCorrelationMatrix`, `PrintCo
 
 Enter the following prompt in Copilot:
 
-"Implement the CalculateCorrelationMatrix method with C# that calculates the correlation matrix for all columns in the dataset. Use MathNet.Numerics to calculate the matrix."
+"Implement the CalculateCorrelationMatrix method with C# that calculates the Pearson correlation matrix for all columns in the dataset. Use MathNet.Numerics to calculate the matrix."
 { .prompt }
 
 Note how I'm guiding the agent by explicitly mentioning **MathNet.Numerics**? I did that, because the Numerics library is the easiest way to calculate a correlation matrix. We can use other libraries (like Deedle or NumSharp), but with Numerics we only need a single call to `Correlation.PearsonMatrix` to calculate the matrix!
 
-If you have a preference for a specific library, mention this in your prompt. This is much better than having the agent pick a library on its own and possibly generate convoluted code to make everything work. 
+If you have a preference for a specific library, mention this in your prompt. This is much better than having the agent pick a library at random and possibly generate convoluted code to make everything work. 
 { .tip }
 
-When I ran the agent myself, I got code that I was not happy with. The agent used a hard coded list of column names to generate the matrix, and a ton of local variables to build the `double[][]` array. It was a full page of unelegant code that could not be reused.
+When I ran Copilot on this prompt, I got a pile of non-reusable code with hardcoded column names everywhere and a ton of local variables to build the jagged `double[][]` array for the correlation matrix.
 
-I decided to refactor the code to this:
+So I decided I hated it, deleted all the code and wrote this instead:
 
 ```csharp
 public static Matrix<double> CalculateCorrelationMatrix<T>(
@@ -85,11 +85,9 @@ public static Matrix<double> CalculateCorrelationMatrix<T>(
 }
 ```
 
-You can see that I use reflection again to access each data property in turn. I use the property values to build a jagged array of doubles that I can use to calculate the correlation matrix.
+My handwritten code uses reflection to access each data column in turn. Then a `foreach` loop builds the jagged array of doubles I need to calculate the correlation matrix. This is much shorter and much more elegant than what the agent generated, it is completely reusable and can be used for any dataset.
 
-This code is much much shorter than what the agent generated, and it is completely reusable and can be used for any dataset.
-
-Don't hesitate to get your hands dirty and completely rewrite sections of agent-generated code. Treat your AI agent as a junior developer who's code occasionally needs correcting by a more senior peer. 
+Don't hesitate to get your hands dirty and completely rewrite sections of agent-generated code. Treat your AI agent as a junior developer who sometimes gets it wrong and needs to be corrected by a more senior peer. 
 { .tip }
 
 #### Print the Correlation Matrix
@@ -99,10 +97,12 @@ Now ask the agent to implement the next method:
 "Implement the PrintCorrelationMatrix method to print a nice matrix on the console using unicode lines. Use the BetterConsoleTables package."
 { .prompt }
 
-Here's the matrix I got when I asked Claude 3.7 to write the code for me:
+You should get something like this:
 
 ![Correlation Matrix](../img/correlation-console.png)
 { .img-fluid .mb-4 }
+
+My agent went a bit overboard and decided to add extra indicators in each matrix cell to show moderate and strong positive or negative correlation. Very nice!
 
 You can clearly see that the **TotalRooms**, **TotalBedrooms**, **Population** and **Household** columns are strongly correlated. So we could consider condensing them into a single feature for machine learning training.
 
@@ -110,7 +110,7 @@ It's also interesting to look at the final column in the matrix. Notice how only
 
 #### Plot the Correlation Heatmap
 
-Now let's see if the agent can generate a heatmap for us with ScottPlot:
+Now let's see if Copilot can generate a heatmap for us with ScottPlot:
 
 "Implement the PlotCorrelationMatrix method to plot a heatmap of the correlation matrix, using ScottPlot."
 { .prompt }
@@ -120,7 +120,7 @@ When I ran this prompt, I got a nice heatmap. But closer inspection of the plot 
 -    The numbers in the heatmap did not correspond to the colors of the cells
 -    The colored backgrounds were offset by 0.5 in each cell
 
-After some hacking, I discovered that the vertical axis of the heatmap needs to be in reverse order for the plot to make sense. Here's how you do that:
+After some hacking, I discovered that both axes of the heatmap needed to be shifted by -0.5, and that the vertical axis of the heatmap needs to be in reverse order for the plot to make sense. Here's how you do that:
 
 ```csharp
 // Set the axis limits to show the full heatmap
@@ -128,9 +128,9 @@ After some hacking, I discovered that the vertical axis of the heatmap needs to 
 plot.Axes.SetLimits(-0.5, featureNames.Length - 0.5, featureNames.Length - 0.5, -0.5);
 ```
 
-I left the original agent-generated line in, so you can see the changes I made. I reversed the vertical axis, and shifted both axes by 0.5 to line up the colored backgrounds of the heatmap cells.
+I left the original agent-generated line in, so you can see the changes I made. I reversed the vertical axis, and shifted both axes by -0.5 to line up the tick marks with the heatmap cells.
 
-Despite repeated prompting, Claude 3.7 was unable to fix this bug and kept getting stuck generating code for the wrong version of ScottPlot.
+Despite repeated prompting, my Claude 3.7 agent was unable to fix this bug and kept getting stuck generating code for the wrong version of ScottPlot.
 
  Always double-check the output of your agent-generated code. My initial heatmap looked perfectly fine at first glance, and only after a closer inspection did I notice that the numbers didn't make sense. 
  { .tip }
@@ -157,7 +157,7 @@ Then press CTRL+I to launch the in-line AI prompt window, and type the following
 "Move all of this code to a separate utility class."
 { .prompt }
 
-When I ran the prompt, I got a new class file **CorrelationUtils.cs** in my project with all of the code for creating, printing and plotting the correlation matrix. I can now use these methods in other projects.
+This will produce a new class file, probably called something like **CorrelationUtils.cs**, with all of the code for creating, printing and plotting the correlation matrix. You can now use these methods in other projects.
 
 When you're happy with generated code and you want to keep it, move it aside into separate class files. That keeps your main code file (Program.cs) clean and ready for the next agent experiment.
 { .tip }
