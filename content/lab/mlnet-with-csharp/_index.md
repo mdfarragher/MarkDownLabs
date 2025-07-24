@@ -7,9 +7,9 @@ image: lab-mlnet-csharp.jpg
 ---
 This lab will quickly bring you up to speed with Microsoft’s new ML.NET machine learning library. You’ll gain a solid foundation in machine learning app development, including key concepts such as feature engineering and data analysis, building pipelines, and setting up regression and classification learning algorithms.
 
-These labs are entirely 'prompted'. You will be using an AI agent to write all the code for you. I will provide you with the prompts to use and help you check the quality and correctness of the generated C# soure code.
+In this lab, you will be using AI agents to generate C# code for you. I'll provide you with prompt suggestions and help you check the quality of the generated soure code and refactor it where needed. You'll gain valuable experience building data science apps in collaboration with AI.
 { .prompt }
 
-As you move through the material, you’ll design, train, and evaluate sophisticated machine learning models directly on your own computer using C# and MLNET.
+As you move through the material, you’ll design, train, and evaluate sophisticated machine learning models directly on your own computer using C# and the MLNET machine learning library.
 
 

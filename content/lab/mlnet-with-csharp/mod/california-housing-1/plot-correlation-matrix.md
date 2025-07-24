@@ -1,5 +1,5 @@
 ---
-title: "Plot The Correlation Matrix"
+title: "Plot The Pearson Correlation Matrix"
 type: "lesson"
 layout: "default"
 sortkey: 42
