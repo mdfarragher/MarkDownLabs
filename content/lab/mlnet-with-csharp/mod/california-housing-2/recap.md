@@ -17,6 +17,6 @@ Congratulations on finishing the lab. Here's what you have learned.
 
 🎓 You learned that custom data transformations cannot be reloaded, unless they are implemented in a separate class tagged with `CustomMappingFactoryAttributeAttribute`.
 
-🎓 Finally, you learned how you can call the `CreatePredictionEngine` method to create a prediction engine that you can use to generate predictions with the fully-trained regression model.
+🎓 Finally, you learned how you can call the `CreatePredictionEngine` method to generate predictions with the fully-trained regression model.
 
 You completed the lab by experimenting with different data processing steps and regression algorithms to find the best-performing model. 

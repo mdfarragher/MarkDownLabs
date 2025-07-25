@@ -56,7 +56,7 @@ Enter the following prompt in Copilot:
 "Implement the CalculateCorrelationMatrix method with C# that calculates the Pearson correlation matrix for all columns in the dataset. Use MathNet.Numerics to calculate the matrix."
 { .prompt }
 
-Note how I'm guiding the agent by explicitly mentioning **MathNet.Numerics**? I did that, because the Numerics library is the easiest way to calculate a correlation matrix. We can use other libraries (like Deedle or NumSharp), but with Numerics we only need a single call to `Correlation.PearsonMatrix` to calculate the matrix!
+Note how we're guiding the agent by explicitly mentioning **MathNet.Numerics**? We do that, because the Numerics library is the easiest way to calculate a correlation matrix. We can use other libraries (like Deedle or NumSharp), but with Numerics we only need a single call to `Correlation.PearsonMatrix` to calculate the matrix!
 
 If you have a preference for a specific library, mention this in your prompt. This is much better than having the agent pick a library at random and possibly generate convoluted code to make everything work. 
 { .tip }
@@ -102,7 +102,7 @@ You should get something like this:
 ![Correlation Matrix](../img/correlation-console.png)
 { .img-fluid .mb-4 }
 
-My agent went a bit overboard and decided to add extra indicators in each matrix cell to show moderate and strong positive or negative correlation. Very nice!
+My agent went a bit overboard and decided to add extra indicators in each matrix cell to show moderate and strong positive or negative correlation. That's a very nice touch.
 
 You can clearly see that the **TotalRooms**, **TotalBedrooms**, **Population** and **Household** columns are strongly correlated. So we could consider condensing them into a single feature for machine learning training.
 
@@ -168,8 +168,8 @@ https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/CaliforniaHousing
 
 #### Summary
 
-The correlation matrix is a very handy tool to figure out which dataset columns are strongly correlated to the label column we're trying to predict. We must include these columns in machine learning training, because they will strongly contribute to good predictions.
+The correlation matrix is a great tool to figure out which dataset columns are strongly correlated to the label column we're trying to predict. We must include these columns in machine learning training, because they will strongly contribute to good predictions.
 
-We can also find feature columns that are strongly correlated to each other. These columns can be combined into one. For example, we could combine **TotalRooms**, **TotalBedrooms**, **Population** and **Households** into two new composite columns: **RoomsPerPerson** and **BedroomsPerHousehold**.
+We can also find feature columns that are strongly correlated to each other. These columns can be combined into one. For example, we could combine **TotalRooms**, **TotalBedrooms**, **Population** and **Households** into a new composite column named **RoomsPerPerson**, by dividing the total number of rooms by the population.
 
 In the next lesson, we're going to do exactly that.

@@ -5,9 +5,7 @@ layout: "default"
 sortkey: 60
 ---
 
-Now let's perform one final data transformation: we're going to calculate the cross product of the encoded latitude and longitude, to create a new 100-element vector of zeroes and ones.
-
-In effect, we're layering a 10x10 grid over the state of California and placing a single zero in the grid to indicate the location of the housing block.
+Now let's perform one final data transformation: we're going to calculate the cross product of the encoded latitude and longitude, to create a new 100-element vector of zeroes and ones. We're layering a 10x10 grid over the state of California and placing a single '1' value in the grid to indicate the location of the housing block.
 
 Let's get started.
 
@@ -15,7 +13,7 @@ Let's get started.
 
 Open the Copilot panel in Visual Studio Code and enter the following prompt:
 
-"Please add a step to the transformation pipeline to calculate a vector cross product of LatitudeEncoded and LongitudeEncoded, creating a new vector with 100 elements."
+"Add a step to the transformation pipeline to calculate a vector cross product of LatitudeEncoded and LongitudeEncoded, creating a new vector with 100 elements."
 { .prompt }
 
 For me, this prompt worked perfectly on the first try. Claude implemented the cross product like this:
@@ -54,7 +52,7 @@ input.LatitudeEncoded![i] * input.LongitudeEncoded![j]
 
 The exclamation mark is the **null-forgiving** operator. It informs the C# compiler that `latitudeEncoded` or `longitudeEncoded` will always be initialized, and suppresses null warnings in this expression.
 
-When I run my code, I get the following output:
+You should get something like the following output:
 
 ![Cross Of Latitude And Longitude](../img/cross-console.png)
 { .img-fluid .mb-4 }

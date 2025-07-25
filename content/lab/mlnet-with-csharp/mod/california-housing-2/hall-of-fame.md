@@ -5,14 +5,12 @@ layout: "default"
 sortkey: 60
 ---
 
-Are you a student in my **MDFT Pro** academy and on the **blue** learning track? Then you can submit your best-performing model for inclusion in the hall of fame. Keep your results ready, you'll have an opportunity to submit them soon. 
-
-Here are the best regression evaluation scores so far for the California Housing dataset. I've added my own results as a baseline, using the transformations I mentioned in the lab. 
+Would you like to be famous? You can [submit your best-performing model](mailto:mark@mdfteurope.com) for inclusion in this hall of fame, which lists the best regression evaluation scores for the California Housing dataset. I've added my own results as a baseline, using the transformations I mentioned in the lab. 
 
 Can you beat my score?
 
-| Name | Algorithm | Transformations |   MAE   |  RMSE   |
-|------|-----------|-----------------|---------|---------|
-| Mark | SDCA      | As mentioned in lab | $42,760 | $60,439 |
+| Rank | Name | Algorithm | Transformations |   MAE   |  RMSE   |
+|------|------|-----------|-----------------|---------|---------|
+|  1   | Mark | SDCA      | As mentioned in lab | $42,760 | $60,439 |
 
-I will periodically compile all submissions into this hall of fame top-10 list and share it in my courses and on social media. If you make the list, you'll be famous!
+I will periodically collect new submissions and merge them into the hall of fame. I'll share the list in my courses and on social media. If you make the list, you'll be famous!

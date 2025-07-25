@@ -1,12 +1,8 @@
 ---
 title: "Conclusion"
 type: "lesson"
-layout: "exit"
+layout: "default"
 sortkey: 910
-
-pathColor: "blue"
-courseName: "Supervised Machine Learning"
-exitLink: "https://www.mdft.academy/view/courses/lectures-supervised-machine-learning/3119189-data-processing-labs/10149827-up-next"
 ---
 
 This concludes the section on feature engineering. You now have some hands-on experience scrubbing, scaling, transforming, binning, one-hot encoding and crossing feature data with MLNET and C#. You'll use these skills in later labs to optimize your machine learning predictions.

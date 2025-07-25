@@ -62,17 +62,17 @@ That should produce the following code:
 This code adds two new components to the pipeline:
 
 - `Concatenate` which combines all features into a single column called Features. This is a required step because ML.NET can only train on a single input column.
-- An `Sdca` regression learner which will train the model to make accurate predictions.
+- An `Sdca` regression trainer which will train the model to make accurate predictions.
 
-When I ran the prompt, I got a Concatenate step that included all features, including **MedianHouseValue**, **Latitude**, **Longitude**, **LatitudeEncoded**, **LongitudeEncoded**, **TotalRooms**, **TotalBedrooms**, **Population** and **Househoulds**.
+Be careful when you run this prompt! My AI agent generated a Concatenate step that included all features, including **MedianHouseValue**, **Latitude**, **Longitude**, **LatitudeEncoded**, **LongitudeEncoded**, **TotalRooms**, **TotalBedrooms**, **Population** and **Househoulds**.
 
-This is obviously wrong, as **LocationCrossProduct** replaces all other latitude and longitude columns, and **RoomsPerPerson** replaces all other room- and person related columns.
+This is obviously wrong, as **LocationCrossProduct** replaces all other latitude and longitude columns, and **RoomsPerPerson** replaces all other room- and person-related columns.
 
-Even worse, did you notice the **MedianHouseValue** column in that list? This is the label that we're trying to predict. If we train a model on the label itself, the model can simply ignore all other features and output the label directly.
+Even worse, did you notice the **MedianHouseValue** column in that list? This is the label that we're trying to predict. If we train a model on the label itself, the model can simply ignore all other features and output the label directly. This is like asking the model to make a prediction, and then giving it the actual answer it is supposed to predict. 
 
 So I had to manually edit the list of columns to fix this.
 
-Always be vigilant. AI agents often make mistakes like this, they are not smart enough to understand what each feature means. That's your job!
+Always be vigilant. AI agents can easily make mistakes like this, because they do not understand the meaning of each dataset column. Your job as a data scientist is to make sure that the generated code does not contain any bugs.
 { .tip }
 
 By the way, SDCA is an optimized stochastic variance reduction algorithm that converges very quickly on an optimal solution. If you're interested, you can read more about the algorithm on Wikipedia:

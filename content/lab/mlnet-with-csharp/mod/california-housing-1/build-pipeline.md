@@ -26,7 +26,7 @@ Which steps will you choose?
 
 #### Implement The Transformation Pipeline
 
-Now let's ask our AI agent to implement our chosen data transformation steps with an ML.NET machine learning pipeline.
+Now let's ask Copilot to implement our chosen data transformation steps with an ML.NET machine learning pipeline.
 
 First, remove any code you don't need anymore (for example, the calls to the `CalculateCorrelationMatrix`, `PrintCorrelationMatrix` and `PlotCorrelationMatrix` methods).
 
@@ -49,11 +49,11 @@ var filteredData = mlContext.Data.FilterRowsByColumn(dataView, nameof(HousingDat
 filteredData = mlContext.Data.FilterRowsByColumn(filteredData, nameof(HousingData.MedianHouseValue), upperBound: 499999);
 ```
 
-The `FilterRowsByColumn` method is a handy tool to quickly filter a dataview by a specific column. You can specify upper- and lower bounds for filtering.
+The `FilterRowsByColumn` method is a great tool to quickly filter a dataview by a specific column. You can specify upper- and lower bounds for filtering.
 
 #### Adding computed columns
 
-If you decided to create a new computed column, for example **RoomsPerPerson**, you'll notice a new class definition in your code:
+If you decided to create a new computed column like **RoomsPerPerson**, you'll notice a new class definition in your code:
 
 ```csharp
 // Class to hold transformed data including the computed column
@@ -107,9 +107,7 @@ public class TransformedHousingData : HousingData
 }
 ```
 
-These properties will hold the transformed latitude and longitude, after they have been converted to one-hot encoded vectors.
-
-Note that the properties have the attribute `VectorType` set, which indicates that these columns are 10-element `float[]` vectors.
+These properties will hold the transformed latitude and longitude, after they have been converted to one-hot encoded vectors. Note that the properties have the attribute `VectorType` set, which indicates that these columns are 10-element `float[]` vectors.
 
 In the main code, you'll find the following transformations:
 
@@ -175,19 +173,15 @@ My Claude 3.7 agent added a bit of extra code after the pipeline to output a sam
 ![Pipeline Run Output](../img/pipeline-run.png)
 { .img-fluid .mb-4 }
 
-You can see that I decided to remove outliers by getting rid of all rows with a population larger than 5000. There were 265 housing blocks matching that condition in the dataset.
-
-The new computed column **RoomsPerPerson** has a numeric range from 0.0019 to 1.0, this is because I normalized all columns, including this one.
-
-And in the sample row, you can clearly see that the latitude and longitude values have been one-hot encoded into 10-element numerical vectors.
+You can see that I decided to remove outliers by getting rid of all rows with a population larger than 5000. There were 265 housing blocks matching that condition in the dataset. The new computed column **RoomsPerPerson** has a numeric range from 0.0019 to 1.0, this is because I normalized all columns, including this one. And in the sample row, you can clearly see that the latitude and longitude values have been one-hot encoded into 10-element numerical vectors.
 
 Everything seems to be working.
 
 #### Summary
 
-In this lesson, you put on your data scientist hat and made a plan that specified which transformations to create and in what order to apply them. The agent then generated the code for you.
+In this lesson, you put on your data scientist hat and decided which data transformation steps to apply to the dataset. The AI agent then generated the corresponding MLNET pipeline code for you.
 
-Coming up with the correct data transformations for any given dataset requires deep domain knowledge and a fair bit of intuition, and this is not something an agent can do for you. Don't fall into the trap of asking the agent to come up with transformations on its own. This is your job!
+Coming up with the correct data transformations for any given dataset requires deep domain knowledge and a fair bit of intuition, and this is not something an agent can reliably do for you. Don't fall into the trap of asking the agent to come up with the transformations, because this is your job!
 
 So always make a plan first, based on your analysis of the dataset. Then prompt the agent and ask it to follow your plan.
 
