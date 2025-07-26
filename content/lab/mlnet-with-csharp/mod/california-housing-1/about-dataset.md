@@ -8,7 +8,8 @@ In machine learning circles, the **California Housing** dataset is a bit of a cl
 
 The dataset serves as an excellent introduction to building machine learning apps because it requires rudimentary data cleaning, has an easily understandable list of variables and has the perfect size for fast training and experimentation. it was compiled by Pace, R. Kelley and Ronald Barry for their 1997 paper titled [Sparse Spatial Autoregressions](https://www.sciencedirect.com/science/article/abs/pii/S016771529600140X). They built it using the 1990 California census data.
 
-<img src="../img/dataset.jpg" alt="The California Housing Dataset" class="img-fluid pb-4" />
+![The California Housing Dataset](../img/dataset.jpg)
+{ .img-fluid .pb-4" }
 
 The dataset contains one record per census block group, with a census block group being the smallest geographical unit for which the U.S. Census Bureau publishes sample data. A census block group typically has a population of around 600 to 3,000 people.
 

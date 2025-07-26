@@ -154,13 +154,23 @@ In Visual Studio Code, select the implementation of the `CalculateCorrelationMat
 
 Then press CTRL+I to launch the in-line AI prompt window, and type the following prompt:
 
-"Move all of this code to a separate utility class."
+"Move all of this code to a separate utility class called CorrelationUtils."
 { .prompt }
 
-This will produce a new class file, probably called something like **CorrelationUtils.cs**, with all of the code for creating, printing and plotting the correlation matrix. You can now use these methods in other projects.
+This will produce a new class file called **CorrelationUtils.cs**, with all of the code for creating, printing and plotting the correlation matrix. You can now use these methods in other projects.
 
 When you're happy with generated code and you want to keep it, move it aside into separate class files. That keeps your main code file (Program.cs) clean and ready for the next agent experiment.
 { .tip }
+
+And if you want to clean up your code and make it as side-effect-free as possible, you can edit `PlotCorrelationMatrix` and have it return the `Plot` instance. You can then save the grid in the main program class instead. Your main calling code will then look like this:
+
+```csharp
+// plot correlation heatmap
+var plot = PlotCorrelationMatrix(matrix, columnNames);
+
+// Save the plot to a file
+plot.SavePng("correlation_heatmap.png", 900, 800);
+```
 
 If you get stuck or want to save some time, feel free to download my completed CorrelationUtils class from Codeberg and use it in your own project:
 
