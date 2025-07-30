@@ -156,9 +156,10 @@ var columnNames = (from p in typeof(TaxiTrip).GetProperties()
                          || p.PropertyType == typeof(int))
                    select p.Name).ToArray();
 
-// set up a 5x4 grid of plots
+// set up a 4x4 grid of plots
 var grid = new ScottPlot.Multiplot();
-grid.Layout = new ScottPlot.MultiplotLayouts.Grid(columns: 5, rows: 4);
+grid.RemovePlot(grid.GetPlot(0)); // remove default plot
+grid.Layout = new ScottPlot.MultiplotLayouts.Grid(columns: 4, rows: 4);
 
 // generate histograms
 foreach (var columnName in columnNames)
@@ -193,7 +194,6 @@ static Plot PlotHistogram<T>(List<T> data, string columnName)
     // Generate histogram using ScottPlot
     var plt = new ScottPlot.Plot();
     plt.Add.Bars(histogram.Bins, histogram.Counts);
-    plt.Title($"{columnName} Histogram");
     plt.XLabel(columnName);
     plt.YLabel("Frequency");
 
@@ -201,7 +201,7 @@ static Plot PlotHistogram<T>(List<T> data, string columnName)
 }
 ```
 
-This method uses reflection to create a `double[]` array of the dataset column specified by `columnName`, and then creates a histogram from this data and returns it as a new plot. The code in the main program class assembles these plots into a nice 5x4 grid. 
+This method uses reflection to create a `double[]` array of the dataset column specified by `columnName`, and then creates a histogram from this data and returns it as a new plot. The code in the main program class assembles these plots into a nice 4x4 grid. 
 
 When you run the app, you should get something like this:
 
@@ -210,10 +210,10 @@ When you run the app, you should get something like this:
 
 We have already covered the PassengerCount histogram with the weird zero-passenger trips, but check out the other plots. There are lots of outliers in this dataset:
 
-- **TripDistance** has outliers for trips > 10 miles
-- **FareAmount** has outliers for fares > 50 dollars
+- **TripDistance** has outliers for trips > 15 miles
+- **FareAmount** has outliers for fares > 100 dollars
 - There are trips where **FareAmount** and **TotalAmount** are negative
-- **TipAmount** has outliers for tips > 10 dollars
+- **TipAmount** has outliers for tips > 15 dollars
 
 At the very least, we'll have to remove (or clip) all trips with zero passengers or a negative fare amount. 
 
@@ -224,7 +224,7 @@ Write down the data transformation steps you are going to use to process the dat
 
 We will reuse this histogram code in later lessons, so this is a good moment to preserve your work.
 
-In Visual Studio Code, select the code that sets up the 5x4 grid of plots, calls the `PlotHistogram` method and saves the grid. Then press CTRL+I to launch the in-line AI prompt window, and type the following prompt:
+In Visual Studio Code, select the code that sets up the 4x4 grid of plots, calls the `PlotHistogram` method and saves the grid. Then press CTRL+I to launch the in-line AI prompt window, and type the following prompt:
 
 "Move this code to a utility method called PlotAllHistograms, with arguments for the list of taxi trips, the list of column names, and the number of rows and columns in the plot grid"
 { .prompt }
@@ -234,7 +234,7 @@ And now that we have these two methods, we can move them both to a utility class
 "Move all of this code to a separate utility class called HistogramUtils."
 { .prompt }
 
-This will produce a new class file called **HistogramUtils.cs**, with all of the code for creating and plotting the grid of histograms for any given feature. We can now use this method in other projects.
+This will produce a new class file called `HistogramUtils`, with all of the code for creating and plotting the grid of histograms for any given feature. We can now use this class in other projects.
 
 And if you want to clean up your code and make it as side-effect-free as possible, you can edit `PlotAllHistograms` and have it return the `Multiplot` grid instance. You can then save the grid in the main program class instead. Your main calling code will then look like this:
 
@@ -250,5 +250,5 @@ Perfect!
 
 If you get stuck or want to save some time, feel free to download my completed HistogramUtils class from Codeberg and use it in your own project:
 
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction
+https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction/HistogramUtils.cs
 
