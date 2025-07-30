@@ -157,7 +157,7 @@ Then press CTRL+I to launch the in-line AI prompt window, and type the following
 "Move all of this code to a separate utility class called CorrelationUtils."
 { .prompt }
 
-This will produce a new class file called **CorrelationUtils.cs**, with all of the code for creating, printing and plotting the correlation matrix. You can now use these methods in other projects.
+This will produce a new class file called `CorrelationUtils`, with all of the code for creating, printing and plotting the correlation matrix. You can now use this class in other projects.
 
 When you're happy with generated code and you want to keep it, move it aside into separate class files. That keeps your main code file (Program.cs) clean and ready for the next agent experiment.
 { .tip }
@@ -174,7 +174,7 @@ plot.SavePng("correlation_heatmap.png", 900, 800);
 
 If you get stuck or want to save some time, feel free to download my completed CorrelationUtils class from Codeberg and use it in your own project:
 
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/CaliforniaHousing
+https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/CaliforniaHousing/CorrelationUtils.cs
 
 #### Summary
 
