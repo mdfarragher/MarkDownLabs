@@ -5,10 +5,10 @@ layout: "default"
 sortkey: 910
 ---
 
-This concludes the section on feature engineering. You now have some hands-on experience scrubbing, scaling, transforming, binning, one-hot encoding and crossing feature data with MLNET and C#. You'll use these skills in later labs to optimize your machine learning predictions.
+This concludes the two regression modules in this lab. I hope you enjoyed training models on the California Housing and New York Taxi datasets. You now have hands-on experience building two C# apps that train models on a dataset. 
 
-The exact sequence of data transformation steps has a huge impact on the accuracy of machine learning predictions. This is why feature engineering is such an important step in data science.
+The New York TLC dataset is a nice example of a large training dataset. We have 8.1 million taxi trips in the month of December alone. If you wanted to train your model on all of 2018, you would have to deal with roughly 100 million rows of data. Very large datasets are common in machine learning. Computer vision models are routinely trained on 10 million images, and contemporary large language models are trained on pretty much the entire Internet!
 
-As you practice with more and more datasets, you will slowly build an intuition for choosing the right transformation step for each feature column in your data.
+If you need to produce other kinds of numerical predictions in the future, feel free to just copy and paste the code from the labs. The steps to build a regression pipeline are the same every time, all you need to tweak are the data processing steps, the learning algorithm and the hyperparameters.
 
-But until then, just remember to always normalize your data and one-hot encode anything that looks like a category!
+I hope that you're starting to realize that machine learning applications are actually very simple. With just a few hundred lines of code, you can process a dataset, train a model, evaluate the metrics, and then start generating predictions.

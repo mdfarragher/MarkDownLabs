@@ -9,14 +9,15 @@ There are many factors that influence the quality of your model predictions, inc
 
 Here are a couple of things you could do to improve your model:
 
-- Bin the latitude and longitude into more than 10 bins, thus creating a finer grid over the state of California.
-- Use a different learning algorithm.
+- Split the pickup datetime into separate hour, day of week and weekend columns
+- Analyze the trip distance and trip duration columns and calculate a new 'on-time' column
+- Filter on one specific ratecode ID and determine the prediction accuracy per ratecode
+- Bin and one-hot encode trip distance to create a new column called 'long-distance'
+- Bin and one-hot encode trip duration to create a new column called 'long-duration'
+- Try a different regression learning algorithm.
 - Use different hyperparameter values for your learning algorithm.
-- Eliminate outliers with a large number of rooms.
-- Eliminate outliers with very small populations.
-- Try to bin other columns, for example replacing **HousingMedianAge** with a three-element one-hot encoding vector with columns "Young", "Median" and "Old".
 
 Experiment with different data processing steps and regression algorithms. Document your best-performing machine learning pipeline for this dataset, and write down the corresponding regression evaluation metrics.
 { .homework }
 
-How close can you make your predictions to the actual house prices? Feel free to try out different approaches. This is how you build valuable machine learning skills!
+How close can you make your predictions to the actual fare amounts? 
