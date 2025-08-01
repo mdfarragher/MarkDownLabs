@@ -10,6 +10,4 @@ In this lab, you're going to write an app in C# that predicts taxi fares in New 
 
 Just like with the California Housing dataset, you will have to perform feature engineering by detecting and dealing with outliers, normalizing columns, one-hot encoding categorical data columns, and adding new calculated features where applicable. You'll also have to split the dataset, select a regression learning algorithm and use it to train a model on the training data partition, then test the fully trained model on the evaluation partition and calculate the regression metrics. 
 
-Finally, you'll imagine a hypothetical taxi trip through New York City and then use your model to generate a fare prediction for that trip. This will be your first complete run-through of a dataset, performing every required data science step in sequence.  
-
-Are you ready? 
+Finally, you'll imagine a taxi trip through New York City and use your model to generate a fare prediction for that trip. 
