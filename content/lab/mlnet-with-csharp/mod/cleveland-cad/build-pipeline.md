@@ -117,7 +117,7 @@ var balancedData = majority
 var balancedView = mlContext.Data.LoadFromEnumerable(balancedData);
 ```
 
-This code shuffles the dataset randomly with `ShuffleRows`, then creates a list of patients with `CreateEnumerable` and groups them by sex. Then the code takes a sample of male patients by calling `Where` and `Take`, and uses `Concat` to combine the undersampled male patients with the full list of female patients. Finally, a call to `LoadFromEnumerable` converts the list back to a dataview. 
+This code shuffles the dataset randomly with `ShuffleRows`, then creates a list of patients with `CreateEnumerable` and groups them by sex. Then the code takes a sample of the majoriy (male patients) by calling `Where` and `Take`, and uses `Concat` to combine the undersampled patients with the full list of female patients. Finally, a call to `LoadFromEnumerable` converts the list back to a dataview. 
 
 This will produce a new dataview with an equal number of male and female patients. 
 
