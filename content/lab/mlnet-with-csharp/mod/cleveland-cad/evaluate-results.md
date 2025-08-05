@@ -121,7 +121,26 @@ var actualLabels = mlContext.Data.CreateEnumerable<HeartData>(
     .ToArray();
 ```
 
-This code generates a list of predictions and actual label values. Next, the code calculates the ROC points like this:
+This code generates `float[]` arrays for the predictions and corresponding actual label values. Note the reference to a new class called `HeartDiseasePrediction`, which looks like this:
+
+```csharp
+// Class to hold model predictions
+public class HeartDiseasePrediction
+{
+    [ColumnName("PredictedLabel")]
+    public bool PredictedLabel { get; set; }
+    
+    [ColumnName("Probability")]
+    public float Probability { get; set; }
+    
+    [ColumnName("Score")]
+    public float Score { get; set; }
+}
+```
+
+This class has a `PredictedLabel` property for the model prediction, a `Score` property for the score values provided by the L-BFG learning algorithm, and a `Probability` property for the reconstructed probabilities provided by the Platt calibrator. 
+
+Next, the code calculates the ROC points like this:
 
 ```csharp
 // Calculate and plot ROC curve points
@@ -253,10 +272,10 @@ I like this code interface. The new `PlotRoc` method only needs `float[]` arrays
 
 Now let's do the same for the confusion matrix. Select the code that generates the matrix, press CTRL+I and enter the following prompt in the inline window:
 
-"Move all of this code to a new method PlotBinaryConfusion, and put this method in the EvaluateUtils class."
+"Move all of this code to a new method PlotConfusion, and put this method in the EvaluateUtils class."
 { .prompt }
 
-I tweaked the generated code to use the same calling interface as the `PlotRoc` method:
+My AI agent generated working code from this prompt, but I tweaked the result a little so that the new `PlotConfusion` method uses the same calling interface as the `PlotRoc` method, like this:
 
 ```csharp
 // Create and plot confusion matrix
