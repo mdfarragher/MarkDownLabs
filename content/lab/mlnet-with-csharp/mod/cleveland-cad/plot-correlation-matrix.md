@@ -53,7 +53,7 @@ We now need to decide on a cutoff value for the correlation matrix. Any features
 
 But which cutoff value should we use?
 
-There's actually a mathematical formula for that. We can calculate the cutoff factors for a dataset of 303 rows and 13 features, for four different selection strategies:
+There's actually a mathematical formula for that. We can calculate the cutoff values for a dataset of 303 rows and 13 features, for four different selection strategies:
 
 | Strategy   | Correlation cutoff value |
 |------------|--------------------------|
@@ -72,6 +72,6 @@ The strategies are:
 
 - **Bonferroni** is the safety-first mode. Because we’re testing 13 features at once, we slice that 5% risk into 13 tiny pieces and demand a much stronger signal before declaring a win; this almost eliminates false positives, but at the cost of throwing away any feature whose link to the label is subtle.
 
-In healthcare, a false negative is a catastrophic error because we would be sending a sick patient home without treatment. Therefore, we should lean toward the **Default** or **None** strategies. More strict strategies like Bonferroni are designed to protect against false discoveries, but in a medical-screening context they do so by discarding moderate yet genuine disease signals, thereby raising the odds that the model overlooks a sick patient.
+In healthcare, a false negative is a catastrophic error because we would be sending a sick patient home without treatment. Therefore, we should lean toward the **Default** or **None** strategies. Strict strategies like Bonferroni are designed to protect against false discoveries, but in a medical-screening context they do so by discarding moderate yet genuine disease signals, thereby raising the odds that the model overlooks a sick patient.
 
 In the next lesson, we're going to generate the scatterplot grid to see if any features have a linear relationship with the diagnosis. 
