@@ -5,10 +5,12 @@ layout: "default"
 sortkey: 910
 ---
 
-This concludes the two regression modules in this lab. I hope you enjoyed training models on the California Housing and New York Taxi datasets. You now have hands-on experience building two C# apps that train models on a dataset. 
+This concludes the lab on binary classification.
 
-The New York TLC dataset is a nice example of a large training dataset. We have 8.1 million taxi trips in the month of December alone. If you wanted to train your model on all of 2018, you would have to deal with roughly 100 million rows of data. Very large datasets are common in machine learning. Computer vision models are routinely trained on 10 million images, and contemporary large language models are trained on pretty much the entire Internet!
+Did you enjoy working with this dataset? Remember, this is real data involving real people that went to the hospital with chest pain and received an official diagnosis. With a well-trained model, they could have received a diagnosis after only a simple interview, blood test and ECG.
 
-If you need to produce other kinds of numerical predictions in the future, feel free to just copy and paste the code from the labs. The steps to build a regression pipeline are the same every time, all you need to tweak are the data processing steps, the learning algorithm and the hyperparameters.
+Healthcare is a hugely important market for machine learning. Treatment and care is expensive, and the average age of the population in many countries is rising rapidly. Healthcare risks becoming completely unaffordable in the future, unless we use AI-enabled automation to bring the cost of care down.
 
-I hope that you're starting to realize that machine learning applications are actually very simple. With just a few hundred lines of code, you can process a dataset, train a model, evaluate the metrics, and then start generating predictions.
+There are already many examples of AI in healthcare, like automated skin cancer diagnosis, LLMs that perform a differential diagnosis, models that hunt for tumors in MRI images... the list goes on.
+
+As a machine learning practitioner, you can be part of this revolution and help create the building blocks of the future of healthcare!

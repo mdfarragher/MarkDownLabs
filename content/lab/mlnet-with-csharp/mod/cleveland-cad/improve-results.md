@@ -9,15 +9,17 @@ There are many factors that influence the quality of your model predictions, inc
 
 Here are a couple of things you could do to improve your model:
 
-- Split the pickup datetime into separate hour, day of week and weekend columns
-- Analyze the trip distance and trip duration columns and calculate a new 'on-time' column
-- Filter on one specific ratecode ID and determine the prediction accuracy per ratecode
-- Bin and one-hot encode trip distance to create a new column called 'long-distance'
-- Bin and one-hot encode trip duration to create a new column called 'long-duration'
-- Try a different regression learning algorithm.
+- Add new **HeartRateReserve** feature (220 - age - thalach)
+- Create a new feature to indicate high blood pressure.
+- Create a new feature to indicate high serum cholesterol.
+- Create a new feature to indicate high blood sugar.
+- Bin the age into age buckets and one-hot encode them.
+- Use [SMOTE-TOMEK](https://en.wikipedia.org/wiki/Synthetic_minority_oversampling_technique) instead of undersampling the men.
+- Create separate expert models for men and women.
+- Try a different classification learning algorithm.
 - Use different hyperparameter values for your learning algorithm.
 
-Experiment with different data processing steps and regression algorithms. Document your best-performing machine learning pipeline for this dataset, and write down the corresponding regression evaluation metrics.
+Experiment with different data processing steps and regression algorithms. Document your best-performing machine learning pipeline for this dataset, and write down the corresponding binary classification evaluation metrics.
 { .homework }
 
-How close can you make your predictions to the actual fare amounts? 
+How accurate can you make your diagnostic predictions? 

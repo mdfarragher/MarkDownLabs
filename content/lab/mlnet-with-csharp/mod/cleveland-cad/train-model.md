@@ -48,7 +48,7 @@ var trainer = mlContext.BinaryClassification.Trainers.LbfgsLogisticRegression(
 var trainingPipeline = mlPipeline.Append(trainer);
 ```
 
-In my case, the AI agent decided to use the L-BFGS logistic regression algorithm which apparently is well-suited for healthcare datasets. Unfortunately, the algorithm has a disadvantage: the scores it produces cannot be interpreted as probability values, which makes it difficult to interpret the predictions it makes.
+In my case, the AI agent decided to use the L-BFGS logistic regression algorithm which apparently is well-suited for healthcare datasets. Unfortunately, the algorithm has a disadvantage: the scores it produces cannot be interpreted as probability values, which makes it difficult to interpret the predictions it makes.  
 
 Fortunately, there's a fix for that. A process called [Platt Calibration](https://en.wikipedia.org/wiki/Platt_scaling) can fit a logistic regression algorithm to the L-BFGS scores and restore the probabilities. Platt Calibration is available in the `Calibrators.Platt` pipeline step built into the ML.NET library:
 
