@@ -7,6 +7,9 @@ image: mod-mnist.jpg
 sortKey: 50
 ---
 
+This lab is unfinished. Many lectures and code examples contain incorrect or incomplete information. Please check back soon for updates.
+{ .tip }
+
 In this lab, you're going to write an app in C# that can recognize handwritten digits on bank checks, printed documents, scanned forms and so on. You'll use the well-known MNIST dataset, which is often used to benchmark computer vision models. The dataset contains 60,000 images, each 28 by 28 pixels, of a handwritten digit from zero to nine. 
 
 Computer vision datasets are always a difficult challenge. There's no point generating histograms or correlation matrices, because each feature represents one pixel in an image. It makes no sense to remove 'outlier pixels' or to check if individual pixels have a linear relationship with the label to predict.
