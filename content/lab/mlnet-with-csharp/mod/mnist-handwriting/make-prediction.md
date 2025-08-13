@@ -1,78 +1,121 @@
 ---
-title: "Make A Prediction"
+title: "Test A Prediction"
 type: "lesson"
 layout: "default"
 sortkey: 140
 ---
 
-To wrap up, let’s use the model to make a prediction.
+To wrap up, let’s use the model to test a prediction.
 
-I am 55 years old (as I'm typing this) and reasonably fit. I work out on average about once per week, and my heart rate during exercise plateaus at around 160 BPM. So I asked GPT o3 to come up with a patient data record that would describe me. 
+We are going to identify the class pair (predicted versus actual label) that the model struggles with the most, select one sample image from that pair, run a prediction and then show the image as ASCII art. That should give us a clue why the model struggles with that particular pair. 
 
-Here's what it came up with:
+Let's see if our AI agent can write all code in one go. Enter the following prompt:
 
-- Age: 55
-- Sex: 1
-- Chest-pain type: 3
-- Resting blood pressure: 129 mm Hg
-- Serum cholesterol: 220 mg/dL
-- Fasting blood sugar: 0
-- Resting ECG: 0
-- Max heart rate achieved: 160 BPM
-- Exercise-induced angina: 0
-- ST depression: 0.0
-- ST-segment slope: 1
-- Major vessels colored: 3
-- Thallium scan: 3
-
-These are great numbers, but my serum cholesterol is a bit high. Should I be worried? 
-
-Let's ask our AI agent to write code that prompts us for all data for a single patient, and then we'll use the machine learning model to predict the diagnosis and probability value. 
-
-#### Make A Prediction
-
-Enter the following prompt:
-
-"Add code to prompt the user for all data for a single patient, and then use the model to generate a prediction of the diagnosis. Report the diagnosis and the probability value."
+"Add code to identify the class pair (predicted versus actual label) that the model struggles with the most, select one sample record from that pair, then use the model to generate a prediction for that digit, and finally show the digit as ASCII art for comparison." 
 { .prompt }
 
-The agent will add code like this to make the prediction:
+#### Find The Most Popular Incorrect Prediction
+
+The agent will add code like this to identify the class pair corresponding to the most popular incorrect prediction:
 
 ```csharp
-// Create a prediction engine to demonstrate single predictions
-var predictionEngine = mlContext.Model.CreatePredictionEngine<HeartDataInput, HeartDiseasePrediction>(mlModel);
+// Get the number of classes
+var confusionMatrix = metrics.ConfusionMatrix;
+int numClasses = confusionMatrix.NumberOfClasses;
 
-// Get user input for patient data and make a prediction
-var patientData = GetPatientDataFromUser();
-var prediction = predictionEngine.Predict(patientData);
+// Find the highest off-diagonal value (most confused pair)
+int maxConfusedActual = -1;
+int maxConfusedPredicted = -1;
+double maxConfusionCount = 0;
 
-// Display results
-Console.WriteLine($"Diagnosis: {prediction.PredictedLabel ? "HEART DISEASE" : "HEALTHY"}");
-Console.WriteLine($"Probability: {prediction.Probability:P2} ({prediction.Probability:F4})");
-Console.WriteLine($"Confidence: {Math.Abs(prediction.Score):F4}");
+for (int actual = 0; actual < numClasses; actual++)
+{
+    for (int predicted = 0; predicted < numClasses; predicted++)
+    {
+        if (actual != predicted) // Skip diagonal (correct predictions)
+        {
+            var predictionIndex = Array.IndexOf(classes, predicted);
+            var actualIndex = Array.IndexOf(classes, actual);
+            double count = confusionMatrix.GetCountForClassPair(predictionIndex, actualIndex);
+            if (count > maxConfusionCount)
+            {
+                maxConfusionCount = count;
+                maxConfusedActual = actual;
+                maxConfusedPredicted = predicted;
+            }
+        }
+    }
+}
 ```
 
-The `CreatePredictionEngine` method sets up a prediction engine. Note that the type of the input data is `HeartDataInput`, because this matches the format of the unmodified dataset. 
+This is the same code as before. It uses `Array.IndexOf` to calculate the indices of every class pair, and `GetCountForClassPair` to find the number of predictions for that class pair. The pair for the worst-performing incorrect predictions gets stored in `maxConfusedActual` and `maxConfusedPredicted`.
 
-With the prediction engine set up, a call to `Predict` is all you need to make a single prediction. The prediction value is then available in the `PredictedLabel` property.
+#### Sample One Incorrect Prediction
 
-Let's try this for my health data is shared earlier.
+Next, we have to select one sample prediction for the worst performing class pair. My agent came up with this, and you'll probably have something similar in your app:
 
-Homework: feed my health data into your trained model and have it predict a diagnosis for me. What result did you get? Should I get a health checkup? 
+```csharp
+// Get predictions with actual labels for analysis
+var predictionList = mlContext.Data.CreateEnumerable<MnistPrediction>(predictions, reuseRowObject: false).ToList();
+var actualList = mlContext.Data.CreateEnumerable<MnistData>(testData, reuseRowObject: false).ToList();
+
+// Find the first sample from the most confused pair
+int sample = -1;
+for (int i = 0; i < predictionList.Count; i++)
+{
+    var prediction = predictionList[i].PredictedLabel;
+    var actual = actualList[i].Label;
+    if (actual == maxConfusedActual && prediction == maxConfusedPredicted)
+    {
+        sample = i;
+        break;
+    }
+}
+```
+
+This code calls `CreateEnumerable` to create lists of predicted and actual labels, and then searches the lists for a pair that matches the worst performing class pair identified earlier. The code simply grabs the first prediction it can find that matches the pair. 
+
+#### Print The Results
+
+Finally, we can report the outcome like this:
+
+```csharp
+Console.WriteLine($"\nFirst image that matches class pair");
+Console.WriteLine($"Row ID: {actualList[sample].RowID}");
+Console.WriteLine($"Actual Label: {actualList[sample].Label}");
+Console.WriteLine($"Predicted Label: {predictionList[sample].PredictedLabel}");
+
+// Show confidence scores for all classes
+Console.WriteLine("\nConfidence scores for all classes:");
+for (int i = 0; i < predictionList[sample].Score.Length; i++)
+{
+    var index = Array.IndexOf(classes, i);
+    Console.WriteLine($"Class {i}: {predictionList[sample].Score[index]:P2}");
+}
+
+// Display the digit as ASCII art
+Console.WriteLine($"\nASCII Art Visualization of Digit:");
+VisualizeDigit(actualList[sample].PixelValues);
+```
+
+This code is quite nice, my AI agent went above and beyond to report everything noteworthy about the sample. I get the actual and predicted label, the confidence scores for all 10 classes and the digit drawn as ASCII art.
+
+Note that the `Score` property with the array of confidence scores is also indexed by key index, so we need another `Array.IndexOf` call to match each score with the correct class value. 
+
+Homework: Inspect your code and make sure you handle class values and key indices correctly everywhere. Then run your app and examine the output. Look at the actual and predicted label, the prediction scores and the ASCII art. Does the incorrect prediction make sense to you? 
 { .homework }
 
-This is the output I get:
+My output looks like this:
 
-![Using The Model To Make A Prediction](../img/prediction.png)
+![Confusion Matrix](../img/prediction-1.png)
 { .img-fluid .mb-4 }
 
-You can clearly see the issue with the L-BFGS learning algorithm. The confidence score for my health prediction is **1.1835** which we cannot interpret as a percentage from 0 to 100.  This is why we need the extra Platt calibration step to introduce a real probability value, which is **19.47%**. 
+We already knew that the most popular incorrect prediction is where the model predicts a 9 but the digit was actually a 4. The code samples image 160 which has this exact same class pair. We can see the individual confidence values, with **55.23%** confidence for a '9' and **44.19%** confidence for a '4'. Those values are pretty close together, so the model simply cannot decide between the one or the other digit. 
 
-In other words, the model is 19.47% confident that I have heart disease. We can invert the probability and state that the model is **80.53%** confident that I do not have heart disease. And my app added a nice advice for me to continue my healthy lifestyle. 
+This is what image 160 looks like:
 
-Sure, I'll do that! 
+![Confusion Matrix](../img/prediction-2.png)
+{ .img-fluid .mb-4 }
 
-What prediction probability did you get? Try changing the input data to see how this affects the diagnosis. Do the predictions make sense to you?
-{ .homework }
+To me this clearly looks like a '4', but I guess the horizontal stroke is too short to make this digit clearly look like the number four. And there's definitely enough sloppy handwriting in the MNIST dataset to confuse the model. 
 
-Next, let's try to improve the accuracy of the predictions.

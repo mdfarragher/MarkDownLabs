@@ -9,135 +9,72 @@ Now let's start designing the ML.NET data transformation pipeline. This is the s
 
 #### Decide Feature Engineering Steps
 
-After completing the previous lessons, you should have a pretty good idea which feature engineering steps are needed to get this dataset ready for machine learning training.
+Actually there's only one step we can do:
 
-You're already performing these transformations:
+- Normalize the pixel values
 
-- Replace missing values for **NumMajorVessels** and **Thalassemia**
-- Remove patients with cholesterol levels > 400
-- Remove patients with blood pressure > 180
-- Remove patients with max heart rate < 80
+Because nothing else is applicable here. There are no outliers, so we don't need to filter the data. There are no numerical features we can bin or categorical features we can one-hot encode. And there is no class imbalance, so there's no need for over- or undersampling. 
 
-Here are some additional steps you could consider:
-
-- Normalize the numerical features
-- Undersample male patients to remove the sex bias
-- One-hot encode all categorical columns
-
-Which steps will you choose?
-
-Write down all feature engineering steps you want to perform on the Cleveland CAD dataset, in order.
-{ .homework }
+In fact, the only transformation we usually do for image datasets is scaling (and optionally converting to grayscale). We don't use any of the usual feature engineering steps. 
 
 #### Implement The Transformation Pipeline
 
-Now let's ask Copilot to implement our chosen data transformation steps with an ML.NET machine learning pipeline. Enter the following prompt in the Copilot panel:
+Let's ask Copilot to add a normalization step to the machine learning pipeline. Enter the following prompt in the Copilot panel:
 
-"Implement the following data transformations by extending the machine learning pipeline:<br>- [your first transformation step]<br>- [your second transformation step]<br>- ..."
+"Add a normalization step to the machine learning pipeline to normalize the pixel values"
 { .prompt }
 
-You should now have a nice data transformation pipeline that prepares your dataset for machine learning training. Let's take a look at the code.
-
-#### Filter outliers
-
-If you decided to remove outliers, your code should look like this (you probably had this code already):
+Let's take a look at the code. The pipeline will look like this:
 
 ```csharp
-// Filter outliers
-var filteredData = mlContext.Data.FilterRowsByColumn(rawDataView, "Chol", upperBound: 400);
-filteredData = mlContext.Data.FilterRowsByColumn(filteredData, "TrestBps", upperBound: 180);
-filteredData = mlContext.Data.FilterRowsByColumn(filteredData, "Thalac", lowerBound: 80);
+// Step 1: Convert Label to Key (categorical)
+var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
+    // Step 2: Normalize pixel values from 0-255 to 0-1 range
+    .Append(mlContext.Transforms.NormalizeMinMax("PixelValues", "PixelValues"))
+    // Step 3: Add a multiclass classifier (using SDCA)
+    .Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("Label", "PixelValues"))
+    // Step 4: Convert prediction back to original values
+    .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 ```
 
-This code uses `FilterRowsByColumn` to filter all numeric columns.
+This code uses `MapValueToKey` to convert the **Label** column to a key value that a learning algorithm can work with. Then the `NormalizeMinMax` method normalizes the **PixelValues** column and we select the `SdcaMaximumEntropy` algorithm to train the machine learning model. Finally, we need a closing `MapKeyToValue` step to convert any predicted keys back to their corresponding label values.
 
-### Normalize Features
+With multiclass classification, we always need pipelines that start with `MapValueToKey` and end with `MapKeyToValue`. This removes the need for one-hot encoding the label, because a 'key' in ML.NET is comparable to a one-hot encoded column.
 
-If you decided to normalize any features in the dataset, it will look like this:
+Your AI agent may have used a different learning algorithm in your pipeline, but there's a good chance it picked SDCA too. LLMs know about many public machine learning datasets, and will usually pick the best learning algorithm for the job at hand. 
+
+#### Split The Dataset
+
+If your AI agent is smart, it will have also generated code to split the dataset, train a model, generate predictions for the test partition and evaluate the quality of the predictions. My Claude 4.0 agent did all that when I only asked for the normalization step. 
+
+If you don't have the code to split your dataset yet, feel free to prompt your AI agent now: 
+
+"Split the transformed data into two partitions: 80% for training and 20% for testing."
+{ .prompt }
+
+You should get the following code:
 
 ```csharp
-// Create a new ML pipeline for feature engineering
-var mlPipeline = mlContext.Transforms.Concatenate(
-    "NumericFeatures", "Age", "TrestBps", "Chol", "Thalac", "OldPeak")
-    
-    // Normalize numeric features
-    .Append(mlContext.Transforms.NormalizeMinMax("NormalizedNumericFeatures", "NumericFeatures"))
+// Split data into training and test sets
+var trainTestSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2);
+var trainData = trainTestSplit.TrainSet;
+var testData = trainTestSplit.TestSet;
 ```
 
-This code uses `Concatenate` to combine all numeric features into a new combined feature called **NumericFeatures**. The `NormalizeMinMax` method then normalizes these features into a new **NormalizedNumericFeatures** column.
+The `TrainTestSplit` method splits a dataset into two parts, with the `testFraction` argument specifying how much data ends up in the second part.
 
-#### One-Hot Encode Categories
+#### Run The Pipeline And Generate Predictions
 
-If you decided to one-hot encode the categorical columns, you'll see the following code:
+And finally, you'll see the following code to perform the transformations and get access to the transformed data:
 
 ```csharp
-// One-hot encode categorical features
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("SexEncoded", "Sex"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("CpEncoded", "Cp"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("FbsEncoded", "Fbs"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("RestEcgEncoded", "RestEcg"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("ExangEncoded", "Exang"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("SlopeEncoded", "Slope"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("CaEncoded", "Ca"))
-.Append(mlContext.Transforms.Categorical.OneHotEncoding("ThalEncoded", "Thal"))
-    
-// Combine all features into a single feature vector
-.Append(mlContext.Transforms.Concatenate(
-    "Features", 
-    "NormalizedNumericFeatures",
-    "SexEncoded", "CpEncoded", "FbsEncoded", "RestEcgEncoded", 
-    "ExangEncoded", "SlopeEncoded", "CaEncoded", "ThalEncoded"));
-```
-The `OneHotEncoding` methods perform one-hot encoding on all categorical features, and **Concatenate** combines the encoded features and the **NormalizedNumericFeatures** column set up earlier into one new column called **Features**.
+// Train the model
+var model = pipeline.Fit(trainData);
 
-#### Undersample Male Patients
-
-There is no built-in pipeline stage in ML.NET to undersample a feature, but instead it can be done with LINQ operations on the dataview, like this:
-
-```csharp
-// Shuffle patients for sampling
-var shuffledPatients = mlContext.Data.ShuffleRows(filteredData);
-
-// Convert patients to enumerable for sampling
-var unbalancedList = mlContext.Data.CreateEnumerable<HeartDataInput>(
-    shuffledPatients, reuseRowObject: false);
-
-// Group patients by sex
-var groupedData = unbalancedList.GroupBy(p => p.Sex);
-var minority = groupedData.OrderBy(g => g.Count()).First();
-var majority = groupedData.OrderBy(g => g.Count()).Last();
-
-// Undersample males and combine with females
-var balancedData = majority
-    .Take(minority.Count())
-    .Concat(minority)
-    .ToList();
-
-// Create new IDataView
-var balancedView = mlContext.Data.LoadFromEnumerable(balancedData);
+// Make predictions on test set
+var predictions = model.Transform(testData);
 ```
 
-This code shuffles the dataset randomly with `ShuffleRows`, then creates a list of patients with `CreateEnumerable` and groups them by sex. Then the code takes a sample of the majoriy (male patients) by calling `Where` and `Take`, and uses `Concat` to combine the undersampled patients with the full list of female patients. Finally, a call to `LoadFromEnumerable` converts the list back to a dataview. 
+This code calls `Fit` to generate a machine learning model that implements the pipeline. The `Transform` method then uses this model to generate predictions for each image in the `testData` partition. 
 
-This will produce a new dataview with an equal number of male and female patients. 
-
-If you want, you can calculate the histogram of the **Sex** column right after undersampling the male patients. It should look like this:
-
-![Histogram Of Sex After Undersampling](../img/histogram-sex.png)
-{.img-fluid .mb-4}
-
-#### Run The Pipeline
-
-And finally, you'll see some code to actually perform the transformations and get access to the transformed data:
-
-```csharp
-// Fit the pipeline to the data
-var mlModel = mlPipeline.Fit(transformedData);
-
-// Transform the data
-var transformedMLData = mlModel.Transform(transformedData);
-```
-
-This code calls `Fit` to generate a machine learning model that implements the pipeline. The `Transform` method then uses this model to transform the original dataview into a new transformed dataview with all data transformations applied. 
-
-Now we're ready to add a binary classification learning algorithm to the machine learning pipeline, so that we can train the model on the data and calculate the classification metrics. 
+Now we're ready to calculate the classification metrics. 
