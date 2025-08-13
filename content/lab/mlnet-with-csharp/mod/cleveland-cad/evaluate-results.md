@@ -245,7 +245,7 @@ Let's put the code for plotting the ROC curve and the confusion matrix into a ut
 
 In Visual Studio Code, select the code that generates the ROC curve. Then press CTRL+I to launch the in-line AI prompt window, and type the following prompt:
 
-"Move all of this code to a new method PlotRoc, and put this method in a new utility class called EvaluateUtils."
+"Move all of this code to a new method PlotRoc, and put this method in a new utility class called BinaryUtils."
 { .prompt }
 
 This cleaned up my main method a lot and only left the following code:
@@ -264,7 +264,7 @@ var actualLabels = mlContext.Data.CreateEnumerable<HeartData>(
     .ToArray();
 
 // Create and save the ROC plot
-var rocPlot = EvaluateUtils.PlotRoc(predictionValues, actualLabels);
+var rocPlot = BinaryUtils.PlotRoc(predictionValues, actualLabels);
 rocPlot.SavePng("roc-curve.png", 900, 600);
 ```
 
@@ -272,14 +272,14 @@ I like this code interface. The new `PlotRoc` method only needs `float[]` arrays
 
 Now let's do the same for the confusion matrix. Select the code that generates the matrix, press CTRL+I and enter the following prompt in the inline window:
 
-"Move all of this code to a new method PlotConfusion, and put this method in the EvaluateUtils class."
+"Move all of this code to a new method PlotConfusion, and put this method in the BinaryUtils class."
 { .prompt }
 
 My AI agent generated working code from this prompt, but I tweaked the result a little so that the new `PlotConfusion` method uses the same calling interface as the `PlotRoc` method, like this:
 
 ```csharp
 // Create and plot confusion matrix
-var cmPlot = EvaluateUtils.PlotConfusion(predictionValues, actualLabels);
+var cmPlot = BinaryUtils.PlotConfusion(predictionValues, actualLabels);
 cmPlot.SavePng("confusion-matrix.png", 900, 600);
 ```
 
@@ -287,9 +287,9 @@ The new `PlotConfusion` method calculates the true positives, true negatives, fa
 
 Perfect!
 
-If you get stuck or want to save some time, feel free to download my completed EvaluateUtils class from Codeberg and use it in your own project:
+If you get stuck or want to save some time, feel free to download my completed BinaryUtils class from Codeberg and use it in your own project:
 
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/HeartDisease/EvaluateUtils.cs
+https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/HeartDisease/BinaryUtils.cs
 
 
 #### Next Steps
