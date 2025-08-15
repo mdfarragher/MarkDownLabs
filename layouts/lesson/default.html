@@ -34,7 +34,13 @@
     {{ end }}
 
     <div class="mt-4">
-        {{ .Content }}
+        {{- $pwd := .Parent.Parent.Params.password -}}
+        {{- if $pwd -}}
+            {{- $wrapped := printf "{{%% hugo-encryptor \"%s\" %%}}%s{{%% /hugo-encryptor %%}}" $pwd .Content -}}
+            {{- .Page.RenderString $wrapped -}}
+        {{- else -}}
+            {{ .Content }}
+        {{- end -}}
     </div>
 
     {{ $next := index $lessons (add $index 1) }}
@@ -49,7 +55,7 @@
         {{ if lt (add $index 1) $numLessons }}
         <a class="btn btn-primary" href="{{ $next.RelPermalink }}">Next Lesson <i class="bi-caret-right"></i></a>
         {{ else }}
-        <a class="btn btn-success" href="../../..">End Lab <i class="bi-caret-right"></i></a>
+        <a class="btn btn-success" href="../../..">End Lab Module <i class="bi-caret-right"></i></a>
         {{ end }}
     </div>
 

@@ -1,5 +1,5 @@
 ---
-title: "Heart Disease Diagnosis"
+title: "5. Diagnose Heart Disease"
 description: "Diagnose heart disease for patients in a hospital in Cleveland"
 type: "mod"
 layout: "single"

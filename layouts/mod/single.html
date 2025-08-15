@@ -10,10 +10,12 @@
         <p class="lead mt-3">{{ .Description }}</p>
     </div>
 
-    {{ if .Params.more }}
-    <div id="moreInfo" class="alert alert-info mt-3" role="alert">
-        <p><i class="bi-info-square-fill mr-1"></i> {{ .Params.more }}</p>
-        <a class="btn btn-success ml-auto" href="{{ .Params.link }}">{{ .Params.learn }} <i class="bi-mortarboard ml-1"></i></a>
+    {{ if .Parent.Params.keyLink }}
+    <div class="alert alert-warning border mt-3">
+        <div class="d-flex align-items-center justify-content-between">
+            <p class="mb-0">You will need an <a class="warning-link text-reset" href="{{ .Parent.Params.keyLink }}"><strong>access code</strong></a> to unlock this lab module.</p>
+            <a class="btn btn-warning btn-sm ml-3" href="{{ .Parent.Params.keyLink }}">Get Access Code</a>
+        </div>
     </div>
     {{ end }}
 
@@ -34,7 +36,7 @@
     
     <div class="d-flex mt-4">
         <a class="btn btn-light border border-dark mr-2" href="../.."><i class="bi-caret-left"></i> View All Modules</a>
-        <a class="btn btn-primary" href="{{ $firstLesson.RelPermalink }}">Start This Lab <i class="bi-caret-right"></i></a>
+        <a class="btn btn-primary" href="{{ $firstLesson.RelPermalink }}">Start Lab Module <i class="bi-caret-right"></i></a>
     </div>
 
 {{ end }}

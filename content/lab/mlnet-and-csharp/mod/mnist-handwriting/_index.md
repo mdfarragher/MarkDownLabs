@@ -1,5 +1,5 @@
 ---
-title: "Recognize Handwriting"
+title: "6. Recognize Handwriting"
 description: "Recognize handwritten digits on checks and scanned forms"
 type: "mod"
 layout: "single"

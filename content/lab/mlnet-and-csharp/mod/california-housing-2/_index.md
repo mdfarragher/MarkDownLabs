@@ -1,5 +1,5 @@
 ---
-title: "California Housing - Part 2"
+title: "3. Predct House Prices"
 description: "Predict house prices in California neighborhoods"
 type: "mod"
 layout: "single"

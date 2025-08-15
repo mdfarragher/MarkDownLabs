@@ -1,5 +1,5 @@
 ---
-title: "Prerequisites"
+title: "1. Prerequisites"
 description: "Set up your development environment"
 type: "mod"
 layout: "single"

@@ -1,5 +1,5 @@
 ---
-title: "New York Taxi Fares"
+title: "4. Predict Taxi Fares"
 description: "Predict taxi fares in New York City"
 type: "mod"
 layout: "single"

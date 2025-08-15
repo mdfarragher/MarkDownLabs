@@ -1,17 +1,15 @@
 baseURL = "https://labs.mdft.academy/"
 languageCode = "en-us"
-title = "MarkUp Labs by MDFT Pro"
+title = "MarkDown Labs by MDFT Pro"
 
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
 
 [markup]
- 
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
-
     [markup.goldmark.parser]
       wrapStandAloneImageWithinParagraph = false
       [markup.goldmark.parser.attribute]

@@ -1,5 +1,5 @@
 ---
-title: "California Housing - Part 1"
+title: "2. California Housing"
 description: "Process a dataset with house prices across California neighborhoods"
 type: "mod"
 layout: "single"
