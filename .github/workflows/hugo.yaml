@@ -74,12 +74,12 @@ jobs:
         with:
           python-version: '3.x'
       - name: List directory contents
-        run: ls -R ${{ runner.temp }}/tools/hugo_encryptor/
+        run: ls -R .
       - name: Install Python packages
-        run: pip install -r ${{ runner.temp }}/tools/hugo_encryptor/requirements.txt
+        run: pip install -r tools/hugo_encryptor/requirements.txt
       - name: Encrypt content
         run: |
-          python ${{ runner.temp }}/tools/hugo_encryptor/hugo-encryptor.py
+          python tools/hugo_encryptor/hugo-encryptor.py
         shell: bash
       - name: Cache Save
         id: cache-save
