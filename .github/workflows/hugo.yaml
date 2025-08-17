@@ -76,7 +76,8 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxml2-dev libxslt-dev
+          sudo apt-get install -y libxml2-dev libxslt-dev python3-dev
+
       - name: Install Python packages
         run: pip install -r tools/hugo_encryptor/requirements.txt
       - name: Encrypt content
