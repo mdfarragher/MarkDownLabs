@@ -33,7 +33,7 @@ jobs:
     env:
       HUGO_VERSION: 0.147.9
       HUGO_ENVIRONMENT: production
-      TZ: America/Los_Angeles
+      TZ: Europe/Amsterdam
     steps:
       - name: Install Hugo CLI
         run: |
@@ -71,7 +71,7 @@ jobs:
             --cacheDir "${{ runner.temp }}/hugo_cache"
       - name: Encrypt content
         run: |
-          python tools/hugo_encryptor/hugo-encryptor.py
+          python ${{ runner.temp }}/tools/hugo_encryptor/hugo-encryptor.py
         shell: python
       - name: Cache Save
         id: cache-save
