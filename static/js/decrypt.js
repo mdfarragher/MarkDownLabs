@@ -1,3 +1,8 @@
+const _get_storagekey = function(path) {
+    let segments = path.replace(/^\/+|\/+$/g, '').split('/');
+    return (segments[1] || '') + ":password";
+};
+
 const _do_decrypt = function (encrypted, password) {
     let key = CryptoJS.enc.Utf8.parse(password);
     let iv = CryptoJS.enc.Utf8.parse(password.substr(16));
@@ -32,18 +37,18 @@ const _click_handler = function (element) {
         decrypted = _do_decrypt(encrypted, password);
     } catch (err) {
         console.error(err);
-        alert("I'm sorry but the access code you entered is not correct.");
+        alert("I'm sorry but the access key is incorrect.");
         return;
     }
 
     if (!decrypted.includes("--- DON'T MODIFY THIS LINE ---")) {
-        alert("Magic text not found in decrypted text.");
+        alert("I'm sorry but the access key is incorrect.");
         return;
     }
 
     let storage = localStorage;
 
-    let key = location.pathname + ".password." + index;
+    let key = _get_storagekey(location.pathname);
     storage.setItem(key, password);
     parent.innerHTML = decrypted;
 }
@@ -56,7 +61,7 @@ window.onload = () => {
     while (1) {
         ++index;
 
-        let key = location.pathname + ".password." + index;
+        let key = _get_storagekey(location.pathname);
         let password = localStorage.getItem(key);
 
         if (!password) {
