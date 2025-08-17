@@ -27,7 +27,7 @@ defaults:
     shell: bash
 
 jobs:
-  # Build job
+
   build:
     runs-on: ubuntu-latest
     env:
@@ -35,22 +35,29 @@ jobs:
       HUGO_ENVIRONMENT: production
       TZ: Europe/Amsterdam
     steps:
+
+      # set up environment for Hugo
       - name: Install Hugo CLI
         run: |
           wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
           && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+
       - name: Install Dart Sass
         run: sudo snap install dart-sass
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+
       - name: Cache Restore
         id: cache-restore
         uses: actions/cache/restore@v4
@@ -60,8 +67,11 @@ jobs:
           key: hugo-${{ github.run_id }}
           restore-keys:
             hugo-
+
       - name: Configure Git
         run: git config core.quotepath false
+
+      # build site with Hugo
       - name: Build Hugo site
         run: |
           hugo \
@@ -69,21 +79,45 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
             --cacheDir "${{ runner.temp }}/hugo_cache"
+
+      # set up environment for hugo-encryptor
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
-      - name: Install system dependencies
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: |
+            tools/hugo_encryptor/requirements.txt
+
+      - name: Install system build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxml2-dev libxslt-dev python3-dev
+          sudo apt-get install -y \
+            build-essential \
+            gcc \
+            python3-dev \
+            libxml2-dev \
+            libxslt1-dev \
+            libffi-dev \
+            libssl-dev \
+            zlib1g-dev
 
-      - name: Install Python packages
-        run: pip install -r tools/hugo_encryptor/requirements.txt
+      - name: Upgrade pip tooling (prefer wheels)
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          # Prefer wheels to avoid building from source where possible
+          echo "PIP_PREFER_BINARY=1" >> $GITHUB_ENV
+
+      - name: Install Python packages for hugo-encryptor
+        working-directory: tools/hugo_encryptor
+        run: |
+          python -m pip install --prefer-binary -r requirements.txt
+
+      # encrypt content
       - name: Encrypt content
         run: |
           python tools/hugo_encryptor/hugo-encryptor.py
-        shell: bash
+        
       - name: Cache Save
         id: cache-save
         uses: actions/cache/save@v4
@@ -91,6 +125,7 @@ jobs:
           path: |
             ${{ runner.temp }}/hugo_cache
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
