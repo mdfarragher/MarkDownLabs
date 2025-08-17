@@ -69,12 +69,20 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
             --cacheDir "${{ runner.temp }}/hugo_cache"
+
+  # encrypt content pages
+  encrypt:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: List directory contents
-        run: ls -R .
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev libxslt-dev
       - name: Install Python packages
         run: pip install -r tools/hugo_encryptor/requirements.txt
       - name: Encrypt content
