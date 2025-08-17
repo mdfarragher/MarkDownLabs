@@ -62,13 +62,19 @@ jobs:
             hugo-
       - name: Configure Git
         run: git config core.quotepath false
-      - name: Build with Hugo
+      - name: Build Hugo site
         run: |
           hugo \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/" \
             --cacheDir "${{ runner.temp }}/hugo_cache"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Python packages
+        run: pip install -r ${{ runner.temp }}/tools/hugo_encryptor/requirements.txt
       - name: Encrypt content
         run: |
           python ${{ runner.temp }}/tools/hugo_encryptor/hugo-encryptor.py
