@@ -5,7 +5,9 @@ layout: "default"
 sortkey: 910
 ---
 
-This concludes the section on feature engineering. You now have some hands-on experience scrubbing, scaling, transforming, binning, one-hot encoding and crossing feature data with MLNET and C#. You'll use these skills in later labs to optimize your machine learning predictions.
+This concludes the section on feature engineering. 
+
+You now have some hands-on experience scrubbing, scaling, transforming, binning, one-hot encoding and crossing feature data with MLNET and C#. You'll use these skills in later labs to optimize your machine learning predictions.
 
 The exact sequence of data transformation steps has a huge impact on the accuracy of machine learning predictions. This is why feature engineering is such an important step in data science.
 

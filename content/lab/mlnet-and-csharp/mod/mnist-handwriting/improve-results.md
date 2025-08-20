@@ -9,6 +9,8 @@ There are many factors that influence the accuracy of your model. These include 
 
 Here are some strategies you can try to improve your model's performance:
 
+{{< encrypt >}}
+
 - Apply image augmentation techniques such as rotation, scaling, or shifting to increase the size of the dataset and give the model more data to train on.
 - Try different learning algorithms.
 - Tune hyperparameters for your chosen learning algorithm.
@@ -19,3 +21,5 @@ Experiment with the skills you learned so far. Try to improve your machine learn
 { .homework }
 
 How accurate can you make your digit recognition model?
+
+{{< /encrypt >}}

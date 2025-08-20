@@ -34,13 +34,7 @@
     {{ end }}
 
     <div class="mt-4">
-        {{- $pwd := .Parent.Parent.Params.password -}}
-        {{- if $pwd -}}
-            {{- $wrapped := printf "{{%% hugo-encryptor \"%s\" %%}}%s{{%% /hugo-encryptor %%}}" $pwd .Content -}}
-            {{- .Page.RenderString $wrapped -}}
-        {{- else -}}
-            {{ .Content }}
-        {{- end -}}
+        {{ .Content }}
     </div>
 
     {{ $next := index $lessons (add $index 1) }}

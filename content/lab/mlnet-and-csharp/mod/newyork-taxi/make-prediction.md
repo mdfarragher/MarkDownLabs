@@ -11,6 +11,8 @@ We're going to invent a fake taxi trip in New York City. I'm going to get into a
 
 We will ask our AI agent to write code that prompts us for all the properties of a single taxi trip, and then we'll use the machine learning model to predict what the fare amount will be.
 
+{{< encrypt >}}
+
 #### Make A Prediction
 
 Enter the following prompt:
@@ -74,3 +76,5 @@ What prediction did you get? Try changing the input data to see how this affects
 { .homework }
 
 Next, let's load the full dataset of 8 million trips and re-run the app to discover the actual regression metrics and prediction accuracy. 
+
+{{< /encrypt >}}

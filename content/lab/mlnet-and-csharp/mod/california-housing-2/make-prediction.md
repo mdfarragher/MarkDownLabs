@@ -13,6 +13,8 @@ For how much could you sell an apartment in that housing block?
 
 We will ask our AI agent to write code that prompts us for all the properties of a single housing block, and then we'll use the machine learning model to predict what the median house value will be for any apartment in the block.
 
+{{< encrypt >}}
+
 #### Make A Prediction
 
 Enter the following prompt:
@@ -83,3 +85,5 @@ Making predictions with the fully trained machine learning model is super easy. 
 Using a machine learning model to generate predictions is called inference, and it requires a lot less compute capacity than training the model did. The inference compute load is often thousands of times smaller than the training load.
 
 So it makes perfect sense to run a model in production, where you can quickly initialize it by importing the weights from a file. If over time the data changes significantly and the prediction quality starts dropping (this is called **data drift**), you can re-train the model on a separate compute platform and copy the new weight file back to production. 
+
+{{< /encrypt >}}

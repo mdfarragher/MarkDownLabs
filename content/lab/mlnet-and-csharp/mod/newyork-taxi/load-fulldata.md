@@ -7,7 +7,11 @@ sortkey: 145
 
 So far, we have been working with a subset of the New York TLC dataset. The subset contains the first 10,000 taxi trips made in the early hours of the morning on December 1st, 2018. This is not a representative subset of all the trips made in December, but it allowed us to quickly design a data transformation pipeline and train a regression model on the data.
 
-Now, let's download the full dataset. The New York City Taxi and Limousine Commission (TLC) website has a page where you can access all [TLC trip record data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) in Parquet format. Please [download the full dataset for December 2018 with this link](https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2018-12.parquet).
+Now, let's download the full dataset. 
+
+{{< encrypt >}}
+
+The New York City Taxi and Limousine Commission (TLC) website has a page where you can access all [TLC trip record data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) in Parquet format. Please [download the full dataset for December 2018 with this link](https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2018-12.parquet).
 
 This is a file named **yellow_tripdata_2018-12.parquet**. It's about 112 MB in size and holds roughly 8.1 million taxi trip records. Copy this file into your project folder.
 
@@ -143,3 +147,5 @@ Be very careful when you design a data transformation pipeline for a partial sub
 { .tip }
 
 In the next lesson, we'll quickly regenerate the histogram grid, the Pearson correlation matrix and the scatterplot grid to see if the data transformation pipeline need to be changed. 
+
+{{< /encrypt >}}

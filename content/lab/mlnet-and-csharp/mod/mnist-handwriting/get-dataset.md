@@ -5,8 +5,11 @@ layout: "default"
 sortkey: 20
 ---
 
-Let's start by downloading the MNIST dataset. Grab the file from here:
-[MNIST dataset](https://csvbase.com/mdfarragher/mnist-handwriting).
+Let's start by downloading the MNIST dataset. 
+
+{{< encrypt >}}
+
+Grab the file from here: [MNIST dataset](https://csvbase.com/mdfarragher/mnist-handwriting).
 
 Download the file and save it as **Mnist-Handwriting.csv**.
 
@@ -45,3 +48,5 @@ dotnet add package Microsoft.ML
 ```
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
+
+{{< /encrypt >}}

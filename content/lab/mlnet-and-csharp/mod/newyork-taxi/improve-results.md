@@ -9,6 +9,8 @@ There are many factors that influence the quality of your model predictions, inc
 
 Here are a couple of things you could do to improve your model:
 
+{{< encrypt >}}
+
 - Split the pickup datetime into separate hour, day of week and weekend columns
 - Analyze the trip distance and trip duration columns and calculate a new 'on-time' column
 - Filter on one specific ratecode ID and determine the prediction accuracy per ratecode
@@ -21,3 +23,5 @@ Experiment with different data processing steps and regression algorithms. Docum
 { .homework }
 
 How close can you make your predictions to the actual fare amounts? 
+
+{{< /encrypt >}}

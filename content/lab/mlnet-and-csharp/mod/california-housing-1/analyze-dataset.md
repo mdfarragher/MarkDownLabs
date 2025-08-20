@@ -7,6 +7,8 @@ sortkey: 30
 
 We’ll begin by analyzing the California Housing dataset and come up with a plan for feature engineering. You won’t write any C# code yet, our goal is to first map out all required data transformation steps to make later machine learning training possible.
 
+{{< encrypt >}}
+
 #### Manually Explore the Data
 
 Let’s start by exploring the dataset manually.
@@ -69,4 +71,6 @@ This back-and-forth helps you learn how to collaborate with AI agents as intelli
 #### Key Takeaway
 
 Agents are powerful, but they’re not magic. Use them to speed up analysis, but always verify their suggestions through manual inspection and common sense.
+
+{{< /encrypt >}}
 

@@ -5,8 +5,11 @@ layout: "default"
 sortkey: 20
 ---
 
-Let's start by downloading the New York TLC dataset. Grab the file from here:
-[Yellow Taxi Trip Records From December 2018](https://csvbase.com/mdfarragher/Taxi-Trips).
+Let's start by downloading the New York TLC dataset. 
+
+{{< encrypt >}}
+
+Grab the file from here: [Yellow Taxi Trip Records From December 2018](https://csvbase.com/mdfarragher/Taxi-Trips).
 
 Download the file and save it as **Taxi-Trips.csv**.
 
@@ -48,3 +51,5 @@ dotnet add package Microsoft.ML
 ```
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
+
+{{< /encrypt >}}

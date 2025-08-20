@@ -1,12 +1,6 @@
-const _get_storagekey = function(path) {
-    let segments = path.replace(/^\/+|\/+$/g, '').split('/');
-    return (segments[1] || '') + ":password";
-};
-
 const _do_decrypt = function (encrypted, password) {
     let key = CryptoJS.enc.Utf8.parse(password);
     let iv = CryptoJS.enc.Utf8.parse(password.substr(16));
-
     let decrypted_data = CryptoJS.AES.decrypt(encrypted, key, {
         iv: iv,
         mode: CryptoJS.mode.CBC,
@@ -16,22 +10,10 @@ const _do_decrypt = function (encrypted, password) {
 };
 
 const _click_handler = function (element) {
-    let parent = element.parentNode.parentNode;
-    let encrypted = parent.querySelector(
-        ".hugo-encryptor-cipher-text").innerText;
-    let password = parent.querySelector(
-        ".hugo-encryptor-input").value;
+    let parent = document.querySelector(".hugo-encryptor-container");
+    let encrypted = parent.querySelector(".hugo-encryptor-cipher-text").innerText;
+    let password = parent.querySelector(".hugo-encryptor-input").value;
     password = CryptoJS.MD5(password).toString();
-
-    let index = -1;
-    let elements = document.querySelectorAll(
-        ".hugo-encryptor-container");
-    for (index = 0; index < elements.length; ++index) {
-        if (elements[index].isSameNode(parent)) {
-            break;
-        }
-    }
-
     let decrypted = "";
     try {
         decrypted = _do_decrypt(encrypted, password);
@@ -40,40 +22,39 @@ const _click_handler = function (element) {
         alert("I'm sorry but the access key is incorrect.");
         return;
     }
-
     if (!decrypted.includes("--- DON'T MODIFY THIS LINE ---")) {
-        alert("I'm sorry but the access key is incorrect.");
+        alert("I'm sorry but the access key is incorrect..");
         return;
     }
-
     let storage = localStorage;
-
     let key = _get_storagekey(location.pathname);
     storage.setItem(key, password);
     parent.innerHTML = decrypted;
 }
 
-window.onload = () => {
-    let index = -1;
-    let elements = document.querySelectorAll(
-        ".hugo-encryptor-container");
+document.addEventListener('DOMContentLoaded', () => {
 
-    while (1) {
-        ++index;
-
-        let key = _get_storagekey(location.pathname);
-        let password = localStorage.getItem(key);
-
-        if (!password) {
-            break;
-
-        } else {
-            console.log("Found password for part " + index);
-
-            let parent = elements[index];
-            let encrypted = parent.querySelector(".hugo-encryptor-cipher-text").innerText;
-            let decrypted = _do_decrypt(encrypted, password);
-            elements[index].innerHTML = decrypted;
+    // get password
+    let key = _get_storagekey(location.pathname);
+    let password = _get_password(key);
+ 
+    // decrypt content
+    let parent = document.querySelector(".hugo-encryptor-container");
+    let decrypted = null;
+    if (password) {
+        let encrypted = parent.querySelector(".hugo-encryptor-cipher-text").innerText;
+        try {
+            decrypted = _do_decrypt(encrypted, password);
+        } catch (err) {
+            decrypted = null;
         }
     }
-};
+    if (decrypted)
+        parent.innerHTML = decrypted;
+    else {
+        // reveal password prompt
+        parent.querySelector(".hugo-encryptor-prompt").classList.remove("d-none");
+        parent.querySelector(".hugo-encryptor-form").classList.add("d-flex");
+        parent.querySelector(".hugo-encryptor-form").classList.remove("d-none");
+    }
+});

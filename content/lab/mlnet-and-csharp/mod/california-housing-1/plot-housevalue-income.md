@@ -5,12 +5,16 @@ layout: "default"
 sortkey: 41
 ---
 
-Do you remember the histogram of the **median_house_value** column from the previous lab lesson? It looks like this:
+In machine learning training, we're looking for features with a balanced distributions of values. Basically, you want the feature histogram to look like a symmetric hump, with flanks on the left and right tapering to zero. 
+
+But do you remember the histogram of the **median_house_value** column from the previous lab lesson? It looks like this:
+
+{{< encrypt >}}
 
 ![Histogram of Median House Value](../img/medianhousevalue-histogram.png)
 { .img-fluid .mb-4 }
 
-In machine learning training, we're looking for features with a balanced distributions of values. Basically, you want the histogram to look like a symmetric hump, with flanks on the left and right tapering to zero. So why does this histogram have that weird peak on the right?
+So why does this histogram have that weird peak on the right?
 
 The peak represents a statistically significant number of housing blocks in the dataset with a house value around half a million dollars. This is an example of **bias**, and it will make it harder for a machine learning model to generate good predictions.
 
@@ -60,3 +64,5 @@ We will have to deal with this in the upcoming lessons, because we don't want a 
 Did I mention that visualization is one of the most important sanity checks in machine learning? It not only helped us identify outliers in the total_rooms column, but it also clearly shows clipping in the median_house_value column.
 
 In upcoming lessons, I'll show you how to deal with outliers and clipping.
+
+{{< /encrypt >}}

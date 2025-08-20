@@ -5,9 +5,11 @@ layout: "default"
 sortkey: 40
 ---
 
-In this lesson, you’ll going to generate the feature histogram grid that contains a histogram for every feature in the dataset. Like before, we're going to use our famous **HistogramUtils** class from the previous lab modules.
+In this lesson, you’ll going to generate the feature histogram grid that contains a histogram for every feature in the dataset. Like before, we're going to use our famous `HistogramUtils` class from the previous lab modules.
 
 Let's get started.
+
+{{< encrypt >}}
 
 #### Install Utility Classes And Dependencies
 
@@ -121,3 +123,5 @@ And these are my conclusions:
 In the next lesson, we'll deal with these issues by replacing the missing values in the **NumMajorVessels** and **Thalassemia** columns, and modifying the **Diag** column to only contain a 0 (patient is healthy) or a 1 (patient has a cardiovascular disease).
 
 Then we'll generate the histogram matrix again and check if everything is ok. 
+
+{{< /encrypt >}}

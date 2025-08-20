@@ -9,6 +9,8 @@ We're going to continue with the code we wrote in the previous lab. That C# appl
 
 So all we need to do is append a few command to the end of the pipeline to train and evaluate a regression model on the data.
 
+{{< encrypt >}}
+
 #### Split The Dataset
 
 But first, we need to split the dataset into two partitions: one for training and one for testing. The training partition is typically a randomly shuffled subset of around 80% of all data, with the remaining 20% reserved for testing.
@@ -103,3 +105,6 @@ The `Fit` method is all you need, it will return a fully trained machine learnin
 In this lesson, you completed the machine learning pipeline you built in the previous lesson, by adding a machine learning algorithm. Then you split the data into a training and testing set, and trained a model on the training set.
 
 In the next lesson, we'll calculate the prediction evaluation metrics to find out how good the model is at predicting house prices.
+
+{{< /encrypt >}}
+

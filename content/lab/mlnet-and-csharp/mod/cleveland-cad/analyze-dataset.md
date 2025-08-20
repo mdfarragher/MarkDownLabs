@@ -7,6 +7,8 @@ sortkey: 30
 
 We’ll begin by analyzing the Cleveland CAD dataset and come up with a plan for feature engineering. Our goal is to map out all required data transformation steps in advance to make later machine learning training as successful as possible.
 
+{{< encrypt >}}
+
 #### Manually Explore the Data
 
 Let’s start by exploring the dataset manually.
@@ -54,3 +56,4 @@ Write down 3 insights from the agent’s analysis.
 
 Next, we'll generate a couple of histograms to see if we can find outliers in any of the data columns. 
 
+{{< /encrypt >}}

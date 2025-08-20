@@ -9,6 +9,8 @@ We are going to use Visual Studio Code to build and edit our machine learning ap
 
 This means that you can edit, run, and debug all apps in this course using either a Windows computer, a Mac, or a Linux machine. There's no need to install anything special to work on the labs
 
+{{< encrypt >}}
+
 You can download the Visual Studio Code installer here:
 https://code.visualstudio.com/
 
@@ -18,3 +20,5 @@ After installing Visual Studio Code and launching it, you'll see something like 
 { .img-fluid .mb-4 }
 
 And that's it! You now have the NET Software Development Kit and Visual Studio Code installed on your computer. With this, you're ready to start building machine learning applications in C#. 
+
+{{< /encrypt >}}

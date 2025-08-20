@@ -7,11 +7,11 @@ sortkey: 50
 
 Now let's start designing the ML.NET data transformation pipeline. This is the sequence of feature engineering steps that will transform the dataset into something suitable for a machine learning algorithm to train on.
 
-#### Decide Feature Engineering Steps
-
 After completing the previous lessons, you should have a pretty good idea which feature engineering steps are needed to get this dataset ready for machine learning training.
 
 You're already performing these transformations:
+
+{{< encrypt >}}
 
 - Add a new column with the trip duration
 - Remove trips with a duration > 60 minutes
@@ -115,3 +115,5 @@ var transformedDataWithFeatures = model.Transform(filteredData);
 This code calls `Fit` to generate a machine learning model that implements the pipeline. The `Transform` method then uses this model to transform the original dataview into a new transformed dataview with all data transformations applied. 
 
 Now we're ready to add a regression learning algorithm to the machine learning pipeline, so that we can train the model on the data and calculate the regression metrics. 
+
+{{< /encrypt >}}

@@ -5,8 +5,11 @@ layout: "default"
 sortkey: 20
 ---
 
-Let's start by downloading the Cleveland CAD dataset. Grab the file from here:
-[Cleveland CAD dataset](https://csvbase.com/mdfarragher/Heart-Disease).
+Let's start by downloading the Cleveland CAD dataset. 
+
+{{< encrypt >}}
+
+Grab the file from here: [Cleveland CAD dataset](https://csvbase.com/mdfarragher/Heart-Disease).
 
 Download the file and save it as **Heart-Disease.csv**.
 
@@ -55,3 +58,5 @@ dotnet add package Microsoft.ML
 ```
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
+
+{{< /encrypt >}}

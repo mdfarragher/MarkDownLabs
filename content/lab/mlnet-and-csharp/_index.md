@@ -9,7 +9,7 @@ courseName: "Supervised Machine Learning with ML.NET and C#"
 courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-csharp"
 keyLink: "https://www.mdft.academy/lab-mlnet-and-csharp"
 
-password: "1234"
+password: "Regression9-Confusion3-Precision4-Correlation5-Bias5"
 ---
 This lab will quickly bring you up to speed with Microsoft’s ML.NET machine learning library. You’ll gain a solid foundation in machine learning and data science, including key concepts such as feature engineering and data analysis, building pipelines, and training models with regression, binary- and multiclass classification algorithms.
 

@@ -9,6 +9,8 @@ Now let's evaluate the quality of the model by having it generate predictions (c
 
 So imagine you are a realtor in California selling houses. What kind of prediction accuracy would you consider acceptable?
 
+{{< encrypt >}}
+
 Determine the minimum mean absolute error or root mean square error values you deem acceptable. This will be the target your model needs to beat.
 { .homework }
 
@@ -78,3 +80,5 @@ Evaluation is an essential step in machine learning, because this is where we ch
 A target of $50k is perfectly reasonable for housing, it means you'll accept a 10% prediction error for houses worth $500k. And the SDCA learning algorithm combined with all the data transformations we discussed was able to beat that target.
 
 Let's continue working on our machine learning app and add a couple more features.
+
+{{< /encrypt >}}

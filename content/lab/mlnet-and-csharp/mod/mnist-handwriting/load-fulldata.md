@@ -7,7 +7,11 @@ sortkey: 145
 
 So far, we have been working with a subset of the MNIST dataset. This subset contains only 10,000 rows, but the official MNIST dataset actually contains 60,000 images for training and 10,000 images for testing. 
 
-So let's download the full dataset and see how our app holds up. This [Github repository](https://github.com/phoebetronic/mnist) contains the full dataset files. Download the **mnist_train.zip** and **mnist_test.zip** files and unzip them to your project folder.
+So let's download the full dataset and see how our app holds up. 
+
+{{< encrypt >}}
+
+This [Github repository](https://github.com/phoebetronic/mnist) contains the full dataset files. Download the **mnist_train.zip** and **mnist_test.zip** files and unzip them to your project folder.
 
 #### Load The Full Dataset
 
@@ -72,3 +76,5 @@ The main diagonal contains all correct predictions, and each cell is deep black 
 We've seen these mistakes before. There are a bit more of them now, but the total number of incorrect predictions is still quite small compared to the number of correct predictions (visible as the color contrast between the main diagonal and the other matrix cells).
 
 All in all this is a pretty good result. We trained on the full dataset and everything is fine!
+
+{{< /encrypt >}}

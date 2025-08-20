@@ -11,6 +11,8 @@ In this section, you’ll going to generate code to plot a histogram for every (
 
 Let's get started.
 
+{{< encrypt >}}
+
 #### Install ScottPlot
 
 First, let's install the ScottPlot NuGet package. In your terminal (inside the TaxiFarePrediction folder), install ScottPlot like this:
@@ -252,3 +254,4 @@ If you get stuck or want to save some time, feel free to download my completed H
 
 https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction/HistogramUtils.cs
 
+{{< /encrypt >}}

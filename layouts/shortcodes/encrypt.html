@@ -1,0 +1,24 @@
+{{ $_hugo_config := `{ "version": 1 }` }}
+
+<div class="hugo-encryptor-container">
+
+  <p>...</p>
+  <div class="hugo-encryptor-prompt alert rounded p-3 mb-4 d-none border border-dark bg-white">
+    <p class="mb-0">Please provide your access code to unlock and read the remainder of this lesson.
+      Your code will be securely stored in your browser, so you only need to enter it once.
+      If you do not have an access code for this lab, you can
+      <a href="{{ .Page.Parent.Parent.Params.keyLink }}">get one here</a>.
+    </p>
+    <div class="hugo-encryptor-form gap-2 align-items-center mt-3">
+      <input class="hugo-encryptor-input form-control" type="password" placeholder="Please Enter Code..." />
+      <input class="hugo-encryptor-button btn btn-light border border-dark" type="button" value="Unlock Lab Lesson"
+        onclick="_click_handler(this)" />
+    </div>
+  </div>
+
+  <div class="hugo-encryptor-cipher-text d-none" data-password="{{ .Page.Parent.Parent.Params.password }}">
+    <span style="display: none;">--- DON'T MODIFY THIS LINE ---</span>
+    {{ .Inner | markdownify }}
+  </div>
+
+</div>

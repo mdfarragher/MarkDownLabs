@@ -9,6 +9,8 @@ It's very easy to calculate and plot the correlation matrix for the New York TLC
 
 Let's see if our AI agent is smart enough to import code from another project.
 
+{{< encrypt >}}
+
 #### Import The CorrelationUtils Helper Class
 
 For the next prompt, you'll need the raw url of the CorrelationUtils class you created in the previous lab. We will ask the agent to import the class into our current project.
@@ -80,3 +82,4 @@ If you compare the rows for **FareAmount** and **TotalAmount** in the correlatio
 
 We're almost ready to build the machine learning pipeline. But before we do that, let's analyze the relationship between **FareAmount**, the label we're going to predict, and **TripDuration**, **TripDistance** and **RateCodeID** to see if we can spot any linear relationships between them. 
 
+{{< /encrypt >}}

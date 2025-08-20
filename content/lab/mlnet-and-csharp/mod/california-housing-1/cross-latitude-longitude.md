@@ -9,6 +9,8 @@ Now let's perform one final data transformation: we're going to calculate the cr
 
 Let's get started.
 
+{{< encrypt >}}
+
 #### Cross The Latitude and Longitude
 
 Open the Copilot panel in Visual Studio Code and enter the following prompt:
@@ -66,3 +68,5 @@ Vector crossing is a handy trick for dealing with latitude and longitude feature
 This gives a machine learning model the freedom to treat each grid cell independently from all others. For example, a model could learn that housing blocks in San Francisco are very expensive, but if you travel a couple of miles east, the price drops rapidly. The model will be able to optimize predictions for these two regions independently.
 
 Unfortunately, Microsoft.ML has no built-in transformation to calculate a feature cross, so we had to implement it manually using a custom transformation.
+
+{{< /encrypt >}}

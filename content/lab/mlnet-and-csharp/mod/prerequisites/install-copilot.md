@@ -7,7 +7,11 @@ sortkey: 30
 
 In this lab, you will be collaborating with an AI agent that will generate C# code for you. You'll be using Github Copilot which is tightly integrated in Visual Studio Code. Once properly set up, Copilot can write and debug code for you, annotate your code with comments, build and test your apps, import and set up NuGet packages, and much more. 
 
-To start, you'll need a Github account. Head over to the [Github Signup](https://github.com/signup) page and set up a new account, if you do not already have one. 
+To start, you'll need a Github account. 
+
+{{< encrypt >}}
+
+Head over to the [Github Signup](https://github.com/signup) page and set up a new account, if you do not already have one. 
 
 Next, you'll need to set up a Github Copilot subscription. You have two choices:
 
@@ -31,3 +35,5 @@ Then click 'Sign in' to sign in to your GitHub account. If you are already signe
 If you haven't set up a Copilot subscription yet, you will automatically be signed up for the **Copilot Free** plan.
 
 And that's it, you're done. You can now start using Copilot in Visual Studio Code. 
+
+{{< /encrypt >}}

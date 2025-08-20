@@ -11,6 +11,8 @@ I am 55 years old (as I'm typing this) and reasonably fit. I work out on average
 
 Here's what it came up with:
 
+{{< encrypt >}}
+
 - Age: 55
 - Sex: 1
 - Chest-pain type: 3
@@ -76,3 +78,5 @@ What prediction probability did you get? Try changing the input data to see how 
 { .homework }
 
 Next, let's try to improve the accuracy of the predictions.
+
+{{< /encrypt >}}

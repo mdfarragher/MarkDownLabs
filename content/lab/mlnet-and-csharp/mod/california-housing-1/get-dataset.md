@@ -5,15 +5,19 @@ layout: "default"
 sortkey: 20
 ---
 
-Let's start by downloading the California Housing dataset. Grab the file from here:
+Let's start by downloading the California Housing dataset. 
+
+{{< encrypt >}}
+
+You can grab the file from here:
 [California 1990 housing census](https://csvbase.com/mdfarragher/California-Housing).
 
 Download the file and save it as **California-Housing.csv**.
 
 The dataset is a CSV file with 17,000 records that looks like this:
 
-![The California Housing Dataset](../img/dataset.jpg)
-{.img-fluid .mb-4}
+![The California Housing Dataset](../img/data.jpg)
+{ .img-fluid .mb-4 }
 
 The file contains information on 17,000 housing blocks all over the state of California. Here's a description of each column:
 
@@ -55,3 +59,5 @@ dotnet add package Microsoft.ML
 **Microsoft.ML** is the Microsoft MLNET machine learning library. We will use it to build all our applications in this course.
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
+
+{{< /encrypt >}}

@@ -11,6 +11,8 @@ In the previous lesson, we discovered that **FareAmount** is the best candidate 
 
 In this lesson, we're going to generate a scatterplot matrix that shows the relationhip between each of these four dataset columns. 
 
+{{< encrypt >}}
+
 #### Create a Scatterplot Matrix
 
 We'll start by setting up our top-level code just like with the Pearson correlation matrix. Add the following code to the main program method:
@@ -135,3 +137,5 @@ https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction/Sca
 We have used the Pearson correlation matrix to identify the features most strongly correlated with the label, and we generated a scatterplot matrix to verify that the relationships between these features and the label are indeed linear (with some noise added).
 
 We're now ready to implement the data transformations and build the machine learning pipeline. 
+
+{{< /encrypt >}}

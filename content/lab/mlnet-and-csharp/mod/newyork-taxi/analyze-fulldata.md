@@ -11,6 +11,8 @@ Then we loaded the parquet dataset that covers the full month of December. The r
 
 We won't know for sure until we recalculate the histograms, the correlation matrix and the scatterplots. 
 
+{{< encrypt >}}
+
 #### Generate The Histogram Matrix
 
 Generating a new histogram matrix is very easy, because the code is still somewhere in your app. The code should look like this:
@@ -142,3 +144,5 @@ Here are the new filters I'm going to use:
 These filters will crash the histogram code, so I'll comment out those lines in my app.
 
 In the next lesson, you'll have the opportunity to optimize your data transformation pipeline and regression model to get the best possible predictions for this dataset. How accurate can you make the fare predictions?  
+
+{{< /encrypt >}}

@@ -9,6 +9,8 @@ Now let's evaluate the quality of the model by comparing the predictions made on
 
 So imagine you take a taxi trip in New York city an you use your model to predict the fare beforehand. What kind of prediction error would you consider acceptable?
 
+{{< encrypt >}}
+
 Determine the minimum mean absolute error or root mean square error values you deem acceptable. This will be the target your model needs to beat.
 { .homework }
 
@@ -69,3 +71,5 @@ Being able to generate fare predictions with an average error of only 42 cents i
 Unfortunately we've given ourselves a very easy goal here. The full TLC dataset covers more than 8 million trips, but we are working with a fraction of that data. Our dataset holds 10,000 trips from shortly after midnight, on December 1st 2018. This is a very easy dataset to work with, and we may be looking at a situation where the SDCA algorithm is memorizing each trip. We won't know anything for sure until we run the app again on all 8 million trips.
 
 We'll do that shortly, but first, let's add a prediction engine to the machine learning app to make a few ad-hoc fare predictions.
+
+{{< /encrypt >}}

@@ -11,6 +11,8 @@ We are going to identify the class pair (predicted versus actual label) that the
 
 Let's see if our AI agent can write all code in one go. Enter the following prompt:
 
+{{< encrypt >}}
+
 "Add code to identify the class pair (predicted versus actual label) that the model struggles with the most, select one sample record from that pair, then use the model to generate a prediction for that digit, and finally show the digit as ASCII art for comparison." 
 { .prompt }
 
@@ -118,4 +120,6 @@ This is what image 160 looks like:
 { .img-fluid .mb-4 }
 
 To me this clearly looks like a '4', but I guess the horizontal stroke is too short to make this digit clearly look like the number four. And there's definitely enough sloppy handwriting in the MNIST dataset to confuse the model. 
+
+{{< /encrypt >}}
 

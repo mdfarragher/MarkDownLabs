@@ -9,6 +9,8 @@ In the previous lab module, you checked for class imbalance in the **Sex** colum
 
 Checking for class imbalance is even more important with multiclass classification datasets, because now we have many distinct label classes to predict, and we want to make sure we have the same number of records for each class. This will ensure that the fully trained model is unbiased.
 
+{{< encrypt >}}
+
 So in this section, you’ll going to generate code to plot a histogram for the Label column, to check how often each digit appears in the dataset.
 
 Let's get started.
@@ -152,3 +154,5 @@ So when I run my app, I see this:
 {.img-fluid .mb-4}
 
 You can see that the image is clearly a handwritten number 7, which is the first image in the MNIST dataset.
+
+{{< /encrypt >}}

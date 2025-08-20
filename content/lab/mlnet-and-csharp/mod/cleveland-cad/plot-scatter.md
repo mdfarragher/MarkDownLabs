@@ -5,11 +5,11 @@ layout: "default"
 sortkey: 48
 ---
 
-In the previous lesson, we discovered that almost all features correlate strongly with the heart disease diagnosis. Only **FastingBloodSugar** and **Cholesterol** have correlation factors below 0.1 and could be discarded. However, to avoid false negatives we should train the model on every feature in the dataset to minimize the probability of the model overlooking weak signals that indicate the presence of cardiovascular disease. 
-
 The **Diagnosis** column is a boolean label, either 0 for healthy patients or 1 for sick patients. So, for the scatterplots, we should only plot features with high cardinality (= having lots of discrete values). That will produce nice plots where we can hopefully spot some linear relationships. 
 
 The high-cardinality columns in the Cleveland CAD dataset are **Age**, **RestingBloodPressure**, **Cholesterol**, **MaxHeartRate** and **STDepression**.
+
+{{< encrypt >}}
 
 #### Create a Scatterplot Matrix
 
@@ -94,3 +94,5 @@ And the two features that most clearly drive the diagnosis are now **STDepressio
 We have used the Pearson correlation matrix to identify the features most strongly correlated with the label, and we generated a scatterplot matrix to identify any relationships between these features and the label.
 
 We're now ready to implement the data transformations and build the machine learning pipeline. 
+
+{{< /encrypt >}}

@@ -9,6 +9,8 @@ Now let's evaluate the quality of the model by comparing the predictions made on
 
 So imagine you're scanning a stack of printed documents with lots of handwritten numbers. What level of accuracy would you consider acceptable?
 
+{{< encrypt >}}
+
 Determine the minimum accuracy you deem acceptable for OCR of handwritten digits. This will be the target your model needs to beat.
 { .homework }
 
@@ -197,3 +199,5 @@ https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/Mnist/MulticlassUtils.
 #### Next Steps
 
 Next, let's add a prediction engine to the machine learning app to make a few ad-hoc predictions for random digits in the dataset.
+
+{{< /encrypt >}}

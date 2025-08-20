@@ -11,6 +11,8 @@ In this section, you’ll going to build a visualization to detect any outliers 
 
 Let's get started.
 
+{{< encrypt >}}
+
 #### Install ScottPlot
 
 ScottPlot is a very nice plotting and visualization library for C# and NET that can go toe-to-toe with Python libraries like matplotlib and seaborn. We will use it in these labs whenever we want to visualize a dataset.
@@ -178,3 +180,5 @@ Visualization is one of the most important sanity checks in machine learning.
 It helps you spot issues, guide preprocessing, and understand how features behave—even before you build a model.
 
 By using ScottPlot and agents together, you’re learning how to both automate and supervise the exploration process.
+
+{{< /encrypt >}}

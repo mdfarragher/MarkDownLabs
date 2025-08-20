@@ -9,6 +9,8 @@ There are many factors that influence the quality of your model predictions, inc
 
 Here are a couple of things you could do to improve your model:
 
+{{< encrypt >}}
+
 - Add new **HeartRateReserve** feature (220 - age - thalach)
 - Create a new feature to indicate high blood pressure.
 - Create a new feature to indicate high serum cholesterol.
@@ -23,3 +25,5 @@ Experiment with different data processing steps and regression algorithms. Docum
 { .homework }
 
 How accurate can you make your diagnostic predictions? 
+
+{{< /encrypt >}}

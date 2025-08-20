@@ -11,6 +11,8 @@ This means that you can build and run the labs in this course on either a Window
 
 We will set up, compile and run all applications directly from the command line. For this, we'll need to install the NET Software Development Kit (SDK).
 
+{{< encrypt >}}
+
 You can download the SDK here:
 https://dotnet.microsoft.com/en-us/download/dotnet
 
@@ -35,3 +37,5 @@ Here's what I see when I run the command on my laptop (screenshot taken in April
 You can see that I'm using a Windows laptop running Windows 10.0.26100 64-bit, and that I have the SDKs installed for NET version 7, 8 and 9. You can have multiple versions of the SDK installed side-by-side without them interfering with each other.
 
 You should see similar output. You're now ready to start building NET applications. But let's install a nice integrated development environment next. 
+
+{{< /encrypt >}}

@@ -13,8 +13,9 @@ In the New York TLC dataset, we have a set of columns that at first glance appea
 
 We would normally expect long-duration taxi trips to cover a large distance and short trips to only cover a small distance. So it's reasonable to assume that trip duration and trip distance are strongly positively correlated. 
 
-The confusion matrix will tell us how strong the correlation is between trip duration and trip distance, but for that, we first need to calculate the duration. Fortunately we have the trip pickup and dropoff date and time, so this should be easy.
+{{< encrypt >}}
 
+The confusion matrix will tell us how strong the correlation is between trip duration and trip distance, but for that, we first need to calculate the duration. Fortunately we have the trip pickup and dropoff date and time, so this should be easy.
 
 #### Calculate the Trip Duration
 
@@ -120,3 +121,5 @@ When you run the new code, you'll get the following histogram:
 Much better! This is a dataset column we can confidently train a machine learning model on. 
 
 Now, we are finally ready to calculate the confusion matrix. 
+
+{{< /encrypt >}}

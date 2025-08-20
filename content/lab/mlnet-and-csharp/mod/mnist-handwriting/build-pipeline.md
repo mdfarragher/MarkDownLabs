@@ -7,6 +7,8 @@ sortkey: 50
 
 Now let's start designing the ML.NET data transformation pipeline. This is the sequence of feature engineering steps that will transform the dataset into something suitable for a machine learning algorithm to train on.
 
+{{< encrypt >}}
+
 #### Decide Feature Engineering Steps
 
 Actually there's only one step we can do:
@@ -78,3 +80,5 @@ var predictions = model.Transform(testData);
 This code calls `Fit` to generate a machine learning model that implements the pipeline. The `Transform` method then uses this model to generate predictions for each image in the `testData` partition. 
 
 Now we're ready to calculate the classification metrics. 
+
+{{< /encrypt >}}

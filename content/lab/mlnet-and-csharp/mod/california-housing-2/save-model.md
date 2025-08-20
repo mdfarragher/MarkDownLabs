@@ -9,6 +9,8 @@ When you have a machine learning model with good prediction quality, you may wan
 
 Saving a model will export all of the internal model weights, which represent the knowledge the model has gathered during the training. These weights are just a series of numbers, and saving these numbers to a file safeguards this knowledge and makes it available for later use.
 
+{{< encrypt >}}
+
 When we want to use a model to make predictions, we can simply set up a blank machine learning model, and then load knowledge into it by importing the weights back in to the model. This bypasses the entire training process, which is great because training a large model can sometimes take weeks or months!
 
 Let's enhance our app with some simple code to save the weights of the fully trained model to a file.
@@ -191,3 +193,6 @@ Saving the fully trained machine learning model is a great trick if you want to 
 We do this all the time in machine learning, because large complex models often require weeks (or even months) to train.
 
 Do be careful with the ONNX format. It's great that we can transfer knowledge between models running on different platforms, but many data transformations (like custom mappings) are not supported. You would not be able to save and then reload the California Housing model in this format.
+
+{{< /encrypt >}}
+

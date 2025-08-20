@@ -5,9 +5,11 @@ layout: "default"
 sortkey: 44
 ---
 
-It's very easy to calculate and plot the Pearson correlation matrix for the Cleveland CAD dataset, because we already imported the **CorrelationUtils** class. 
+It's very easy to calculate and plot the Pearson correlation matrix for the Cleveland CAD dataset, because we already imported the `CorrelationUtils` class. 
 
 All you have to do is add following code:
+
+{{< encrypt >}}
 
 ```csharp
 // Calculate the correlation matrix
@@ -75,3 +77,5 @@ The strategies are:
 In healthcare, a false negative is a catastrophic error because we would be sending a sick patient home without treatment. Therefore, we should lean toward the **Default** or **None** strategies. Strict strategies like Bonferroni are designed to protect against false discoveries, but in a medical-screening context they do so by discarding moderate yet genuine disease signals, thereby raising the odds that the model overlooks a sick patient.
 
 In the next lesson, we're going to generate the scatterplot grid to see if any features have a linear relationship with the diagnosis. 
+
+{{< /encrypt >}}

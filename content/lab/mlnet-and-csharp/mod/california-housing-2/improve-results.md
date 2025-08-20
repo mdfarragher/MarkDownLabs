@@ -9,6 +9,8 @@ There are many factors that influence the quality of your model predictions, inc
 
 Here are a couple of things you could do to improve your model:
 
+{{< encrypt >}}
+
 - Bin the latitude and longitude into more than 10 bins, thus creating a finer grid over the state of California.
 - Use a different learning algorithm.
 - Use different hyperparameter values for your learning algorithm.
@@ -20,3 +22,5 @@ Experiment with different data processing steps and regression algorithms. Docum
 { .homework }
 
 How close can you make your predictions to the actual house prices? Feel free to try out different approaches. This is how you build valuable machine learning skills!
+
+{{< /encrypt >}}

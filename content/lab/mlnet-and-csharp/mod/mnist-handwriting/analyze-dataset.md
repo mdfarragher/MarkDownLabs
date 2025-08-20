@@ -7,6 +7,8 @@ sortkey: 30
 
 We’ll begin by analyzing the MNIST dataset and come up with a plan for feature engineering. Our goal is to map out all required data transformation steps in advance to make later machine learning training as successful as possible.
 
+{{< encrypt >}}
+
 #### Manually Explore the Data
 
 Let’s start by exploring the dataset manually.
@@ -48,3 +50,4 @@ Write down 3 insights from the agent’s analysis.
 
 Next, we'll generate a quick histogram to check if the populations for all classes are balanced. 
 
+{{< /encrypt >}}

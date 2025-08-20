@@ -11,6 +11,8 @@ The Cleveland CAD dataset has two columns with missing values:
 
 You can easily spot them in the Heart-Disease.csv datafile as '?' characters where the values should be.
 
+{{< encrypt >}}
+
 ![Missing Values In The Cleveland CAD Dataset](../img/missing.jpg)
 { .img-fluid .mb-4 }
 
@@ -175,3 +177,5 @@ A couple of observations:
 - For the **Thalassemia** column, a value of 3 is the most common. This seems to be a good default for missing values. 
 
 We're now ready to calculate the Pearson correlation matrix. We will do that in the next lesson. 
+
+{{< /encrypt >}}

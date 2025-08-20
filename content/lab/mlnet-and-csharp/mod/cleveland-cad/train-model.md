@@ -9,6 +9,8 @@ We're going to continue with the code we wrote in the previous lab. Our app sets
 
 So all that remains is to append a step to the end of the pipeline to train a binary classification model on the data.
 
+{{< encrypt >}}
+
 #### Split The Dataset
 
 But first, we need to split the dataset into two partitions: one for training and one for testing. The training partition is a randomly shuffled subset of 80% of all data, with the remaining 20% reserved for testing.
@@ -64,3 +66,5 @@ var mlModel = calibratedPipeline.Fit(trainingData);
 We now have a `calibratedPipeline` that produces reliable probability scores.
 
 In the next lesson, we'll calculate the prediction evaluation metrics to find out how good the model is at predicting heart disease.
+
+{{< /encrypt >}}

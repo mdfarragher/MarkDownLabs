@@ -7,6 +7,8 @@ sortkey: 50
 
 Now let's start designing the ML.NET data transformation pipeline. This is the sequence of feature engineering steps that will transform the dataset into something suitable for a machine learning algorithm to train on.
 
+{{< encrypt >}}
+
 #### Decide Feature Engineering Steps
 
 After completing the previous lessons, you should have a pretty good idea which feature engineering steps are needed to get this dataset ready for machine learning training.
@@ -186,3 +188,5 @@ Coming up with the correct data transformations for any given dataset requires d
 So always make a plan first, based on your analysis of the dataset. Then prompt the agent and ask it to follow your plan.
 
 To wrap this lab up, let's see if we can create a cross product of the latitude and longitude vectors.
+
+{{< /encrypt >}}
