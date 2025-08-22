@@ -1,6 +1,6 @@
 const _get_storagekey = function(path) {
     let segments = path.replace(/^\/+|\/+$/g, '').split('/');
-    return "mdft:" + (segments[1] || '') + ":key";
+    return "mdft:lab:" + (segments[1] || '') + ":key";
 };
 
 const _get_password = function(key) {
