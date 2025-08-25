@@ -1,0 +1,11 @@
+baseURL = "https://labs.mdft.academy/"
+environment = "production"
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[caches]
+  [caches.assets]
+    dir = ":resourceDir/_gen"
+    maxAge = "8760h" # 1 year
