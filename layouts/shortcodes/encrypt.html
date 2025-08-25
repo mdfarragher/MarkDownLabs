@@ -1,5 +1,9 @@
 {{ $_hugo_config := `{ "version": 1 }` }}
 
+{{ if site.Params.disableEncryption }}
+  {{ .Page.RenderString .Inner }}
+{{ else }}
+
 <div class="hugo-encryptor-container">
 
   <p>...</p>
@@ -22,3 +26,5 @@
   </div>
 
 </div>
+
+{{ end }}

@@ -17,3 +17,6 @@ title = "MarkDown Labs by MDFT Pro"
   
   [markup.highlight]
     style = "catppuccin-latte"
+
+[params]
+  disableEncryption = true
