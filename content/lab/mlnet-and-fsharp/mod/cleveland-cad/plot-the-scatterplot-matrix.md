@@ -24,7 +24,7 @@ All you need to add is the following code:
 let scatterPlotColumns = [| "Age"; "RestingBloodPressure"; "Cholesterol"; "MaxHeartRate"; "STDepression"; "Diagnosis" |]
 
 // plot scatterplot matrix
-Console.WriteLine("Generating scatterplot matrix...")
+printfn "Generating scatterplot matrix..."
 let smplot = ScatterUtils.PlotScatterplotMatrix<HeartData>(heartDataList, scatterPlotColumns)
 
 // Save the plot to a file

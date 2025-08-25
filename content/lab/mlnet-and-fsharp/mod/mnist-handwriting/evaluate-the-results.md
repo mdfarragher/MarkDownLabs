@@ -31,11 +31,11 @@ let predictions = model.Transform(testData)
 
 // Evaluate the model
 let metrics = mlContext.MulticlassClassification.Evaluate(predictions, "Label", "Score")
-Console.WriteLine("\nModel Evaluation Results:")
-Console.WriteLine($"Macro Accuracy: {metrics.MacroAccuracy:P2}")
-Console.WriteLine($"Micro Accuracy: {metrics.MicroAccuracy:P2}")
-Console.WriteLine($"Log-Loss: {metrics.LogLoss:F4}")
-Console.WriteLine($"Log-Loss Reduction: {metrics.LogLossReduction:F4}")
+printfn "\nModel Evaluation Results:"
+printfn $"Macro Accuracy: {metrics.MacroAccuracy:P2}"
+printfn $"Micro Accuracy: {metrics.MicroAccuracy:P2}"
+printfn $"Log-Loss: {metrics.LogLoss:F4}"
+printfn $"Log-Loss Reduction: {metrics.LogLossReduction:F4}"
 ```
 
 This code calls `Transform` to set up predictions for every digit in the test partition. The `MulticlassClassification.Evaluate` method then compares these predictions to the actual labels and automatically calculates these metrics:
@@ -83,7 +83,7 @@ Printing the confusion matrix is super easy because ML.NET has a built-in method
 
 ```fsharp
 // Display confusion matrix
-Console.WriteLine(metrics.ConfusionMatrix.GetFormattedConfusionTable())
+printfn "%s" (metrics.ConfusionMatrix.GetFormattedConfusionTable())
 ```
 
 The multiclass evaluation metrics object has a property `ConfusionMatrix` to access the matrix, and the `GetFormattedConfusionTable` method returns the full table as a string that we can write directly to the console. 

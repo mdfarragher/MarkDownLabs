@@ -4,6 +4,7 @@ description: "Build Machine Learning Applications In F# With The Microsoft ML.NE
 type: "lab"
 layout: "single"
 image: lab-mlnet-csharp.jpg
+hideLab: true
 
 courseName: "Supervised Machine Learning with ML.NET and F#"
 courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-csharp"

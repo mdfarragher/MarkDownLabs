@@ -44,7 +44,7 @@ You should now see a learning algorithm appended to your pipeline:
 
 ```fsharp
 // Add a binary classification trainer to the pipeline
-Console.WriteLine("Adding binary classification trainer to pipeline...")
+printfn "Adding binary classification trainer to pipeline..."
 let trainer = mlContext.BinaryClassification.Trainers.LbfgsLogisticRegression(
     labelColumnName = "Diag", 
     featureColumnName = "Features")

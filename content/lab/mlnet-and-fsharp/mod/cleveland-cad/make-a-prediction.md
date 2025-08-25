@@ -51,9 +51,9 @@ let patientData = GetPatientDataFromUser()
 let prediction = predictionEngine.Predict(patientData)
 
 // Display results
-Console.WriteLine($"Diagnosis: {if prediction.PredictedLabel then "HEART DISEASE" else "HEALTHY"}")
-Console.WriteLine($"Probability: {prediction.Probability:P2} ({prediction.Probability:F4})")
-Console.WriteLine($"Confidence: {abs prediction.Score:F4}")
+printfn $"Diagnosis: {if prediction.PredictedLabel then "HEART DISEASE" else "HEALTHY"}"
+printfn $"Probability: {prediction.Probability:P2} ({prediction.Probability:F4})"
+printfn $"Confidence: {abs prediction.Score:F4}"
 ```
 
 The `CreatePredictionEngine` method sets up a prediction engine. Note that the type of the input data is `HeartDataInput`, because this matches the format of the unmodified dataset. 

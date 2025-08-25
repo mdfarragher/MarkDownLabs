@@ -40,7 +40,7 @@ And then it will add code like this to make the prediction:
 let tripData = { inherited = Unchecked.defaultof<TaxiTrip>; TripDuration = 0.0f }
 
 // Get user input
-Console.Write("Trip Duration (minutes): ")
+printf "Trip Duration (minutes): "
 match System.Single.TryParse(Console.ReadLine()) with
 | true, tripDuration -> tripData.TripDuration <- tripDuration
 | _ -> ()
@@ -54,7 +54,7 @@ let predictionEngine = mlContext.Model.CreatePredictionEngine<TaxiTripWithDurati
 let prediction = predictionEngine.Predict(tripData)
 
 // Display prediction
-Console.WriteLine($"Predicted Fare Amount: ${prediction.PredictedFareAmount:F2}")
+printfn $"Predicted Fare Amount: ${prediction.PredictedFareAmount:F2}"
 ```
 
 The `CreatePredictionEngine` method sets up a prediction engine. The two type arguments are the input data record type and the record type to hold the prediction.

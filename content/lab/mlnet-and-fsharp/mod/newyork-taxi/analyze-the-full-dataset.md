@@ -33,7 +33,7 @@ let columnNames =
     |> Array.map (fun p -> p.Name)
 
 // calculate the histogram grid
-Console.WriteLine("Generating histograms...")
+printfn "Generating histograms..."
 let grid = HistogramUtils.PlotAllHistograms<TaxiTripWithDuration>(taxiTrips, columnNames, columns = 4, rows = 4)
 
 // save the grid

@@ -76,19 +76,19 @@ This code calls `CreateEnumerable` to create lists of predicted and actual label
 Finally, we can report the outcome like this:
 
 ```fsharp
-Console.WriteLine($"\nFirst image that matches class pair")
-Console.WriteLine($"Row ID: {actualList.[sample].RowID}")
-Console.WriteLine($"Actual Label: {actualList.[sample].Label}")
-Console.WriteLine($"Predicted Label: {predictionList.[sample].PredictedLabel}")
+printfn "\nFirst image that matches class pair"
+printfn $"Row ID: {actualList.[sample].RowID}"
+printfn $"Actual Label: {actualList.[sample].Label}"
+printfn $"Predicted Label: {predictionList.[sample].PredictedLabel}"
 
 // Show confidence scores for all classes
-Console.WriteLine("\nConfidence scores for all classes:")
+printfn "\nConfidence scores for all classes:"
 for i in 0 .. predictionList.[sample].Score.Length - 1 do
     let index = Array.IndexOf(classLabels, float32 i)
-    Console.WriteLine($"Class {i}: {predictionList.[sample].Score.[index]:P2}")
+    printfn $"Class {i}: {predictionList.[sample].Score.[index]:P2}"
 
 // Display the digit as ASCII art
-Console.WriteLine($"\nASCII Art Visualization of Digit:")
+printfn "\nASCII Art Visualization of Digit:"
 VisualizeDigit(actualList.[sample].PixelValues)
 ```
 

@@ -27,16 +27,16 @@ That should create the following code:
 
 ```fsharp
 // Use the trained model to create predictions for the test set
-Console.WriteLine("Evaluating model on test data...")
+printfn "Evaluating model on test data..."
 let predictions = model.Transform(testingData)
 
 // Display the model evaluation metrics
 let metrics = mlContext.Regression.Evaluate(predictions, labelColumnName = "FareAmount")
-Console.WriteLine()
-Console.WriteLine("**** Model Metrics ****")
-Console.WriteLine($"Root Mean Squared Error: {metrics.RootMeanSquaredError:F3}")
-Console.WriteLine($"Mean Absolute Error: {metrics.MeanAbsoluteError:F3}")
-Console.WriteLine($"R-Squared: {metrics.RSquared:F3}")
+printfn ""
+printfn "**** Model Metrics ****"
+printfn $"Root Mean Squared Error: {metrics.RootMeanSquaredError:F3}"
+printfn $"Mean Absolute Error: {metrics.MeanAbsoluteError:F3}"
+printfn $"R-Squared: {metrics.RSquared:F3}"
 ```
 
 This code calls `Transform` to set up predictions for every single taxi trip in the test partition. The `Evaluate` method then compares these predictions to the actual fare amounts and automatically calculates these metrics:

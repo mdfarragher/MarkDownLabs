@@ -88,7 +88,7 @@ To generate the histogram of labels, we can simply do this:
 
 ```fsharp
 // generate the histogram of labels
-Console.WriteLine("Generating histograms of labels...")
+printfn "Generating histograms of labels..."
 let hist = HistogramUtils.PlotHistogram<MnistData>(dataList, "Label")
 
 // save the histogram
@@ -129,15 +129,15 @@ let VisualizeDigit (pixels: float32[]) =
                 elif pixelValue < 192.0f then '*'
                 else '#'
             
-            Console.Write(displayChar)
-        Console.WriteLine()
+            printf "%c" displayChar
+        printfn ""
 ```
 
 This is cool! And in the main program method, it added the following code:
 
 ```fsharp
 // Visualize a sample digit (optional)
-Console.WriteLine("\nVisualizing first digit (28x28 ASCII art):")
+printfn "\nVisualizing first digit (28x28 ASCII art):"
 let firstRecord = List.head dataList
 VisualizeDigit(firstRecord.PixelValues)
 ```

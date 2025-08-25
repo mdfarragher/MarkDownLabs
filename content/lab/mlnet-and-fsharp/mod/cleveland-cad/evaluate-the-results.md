@@ -37,17 +37,17 @@ let metrics = mlContext.BinaryClassification.Evaluate(
     probabilityColumnName = "Probability")
     
 // Display metrics
-Console.WriteLine("\nModel Evaluation Metrics:")
-Console.WriteLine($"  Accuracy:          {metrics.Accuracy}")
-Console.WriteLine($"  Auc:               {metrics.AreaUnderRocCurve}")
-Console.WriteLine($"  Auprc:             {metrics.AreaUnderPrecisionRecallCurve}")
-Console.WriteLine($"  F1Score:           {metrics.F1Score}")
-Console.WriteLine($"  LogLoss:           {metrics.LogLoss}")
-Console.WriteLine($"  LogLossReduction:  {metrics.LogLossReduction}")
-Console.WriteLine($"  Precision:         {metrics.PositivePrecision}")
-Console.WriteLine($"  Recall:            {metrics.PositiveRecall}")
-Console.WriteLine($"  NegativePrecision: {metrics.NegativePrecision}")
-Console.WriteLine($"  NegativeRecall:    {metrics.NegativeRecall}")   
+printfn "\nModel Evaluation Metrics:"
+printfn $"  Accuracy:          {metrics.Accuracy}"
+printfn $"  Auc:               {metrics.AreaUnderRocCurve}"
+printfn $"  Auprc:             {metrics.AreaUnderPrecisionRecallCurve}"
+printfn $"  F1Score:           {metrics.F1Score}"
+printfn $"  LogLoss:           {metrics.LogLoss}"
+printfn $"  LogLossReduction:  {metrics.LogLossReduction}"
+printfn $"  Precision:         {metrics.PositivePrecision}"
+printfn $"  Recall:            {metrics.PositiveRecall}"
+printfn $"  NegativePrecision: {metrics.NegativePrecision}"
+printfn $"  NegativeRecall:    {metrics.NegativeRecall}"   
 ```
 
 This code calls `Transform` to set up predictions for every patient in the test partition. The `BinaryClassification.Evaluate` method then compares these predictions to the actual diagnoses and automatically calculates these metrics:
