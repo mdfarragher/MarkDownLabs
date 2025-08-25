@@ -19,4 +19,4 @@ title = "MarkDown Labs by MDFT Pro"
     style = "catppuccin-latte"
 
 [params]
-  disableEncryption = true
+  disableEncryption = false
