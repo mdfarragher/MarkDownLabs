@@ -10,10 +10,12 @@
 
     <div class="item-grid">
     {{ range (.GetPage "/lab").Pages }}
-        <a href="{{ .RelPermalink }}" class="item-tile">
-            <img src="{{ urls.RelURL (add "img/" .Params.image) }}" alt="Category image">
-            <div>{{ .Title }}</div>
-        </a>
+        {{ if not .Params.hideLab }}
+            <a href="{{ .RelPermalink }}" class="item-tile">
+                <img src="{{ urls.RelURL (add "img/" .Params.image) }}" alt="Category image">
+                <div>{{ .Title }}</div>
+            </a>
+        {{ end }}
     {{ end }}
     </div>
 
