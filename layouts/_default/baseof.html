@@ -13,22 +13,38 @@
     </head>
     <body {{ block "onload" . }}{{ end }}>
 
-        <nav class="navbar navbar-dark bg-dark">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="{{ urls.RelURL "img/mdft.png" }}" class="mr-2" width="32" height="32">
-                <span class="text-align-bottom">MarkDown Labs</span>
-            </a>
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="https://www.mdft.academy/training">To Academy <i class="bi-arrow-right"></i></a>
-                </li>
-            </ul>
-        </nav>
+        <div class="container p-0">
 
-        <div class="breadcrumb bg-transparent small my-0">
-            <a class="breadcrumb-item" href="/"><i class="bi-house"></i></a>
-            {{ block "nav" . }}
-            {{ end }}
+            <nav class="navbar navbar-white bg-white">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="{{ urls.RelURL "img/logo.png" }}" class="mr-2" height="42">
+                </a>
+                <ul class="navbar-nav d-flex flex-row">
+                    <li class="nav-item active mr-4">
+                        <a class="nav-link" href="https://quiz.mdft.academy">Certification</a>
+                    </li>
+                    <li class="nav-item active mr-4">
+                        <a class="nav-link" href="/">Labs</a>
+                    </li>
+                    <li class="nav-item active mr-4">
+                        <a class="nav-link" href="https://www.mdft.academy/courses">Courses</a>
+                    </li>
+                    <li class="nav-item active mr-4">
+                        <a class="nav-link" href="https://www.mdft.academy/blog">Blog</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="https://www.mdft.academy">To Academy <i class="bi-arrow-right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="breadcrumb bg-transparent small my-0">
+                <a class="breadcrumb-item" href="/"></a>
+                <a class="breadcrumb-item" href="/">Home</a>
+                {{ block "nav" . }}
+                {{ end }}
+            </div>
+
         </div>
 
         <div class="container pb-4">

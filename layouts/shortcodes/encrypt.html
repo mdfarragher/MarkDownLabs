@@ -11,11 +11,11 @@
     <p class="mb-0">Please provide your access code to unlock and read the remainder of this lesson.
       Your code will be securely stored in your browser, so you only need to enter it once.
       If you do not have an access code for this lab, you can
-      <a href="{{ .Page.Parent.Parent.Params.keyLink }}">get one here</a>.
+      <a class="warning-link" href="{{ .Page.Parent.Parent.Params.keyLink }}">get one here</a>.
     </p>
     <div class="hugo-encryptor-form gap-2 align-items-center mt-3">
       <input class="hugo-encryptor-input form-control" type="password" placeholder="Please Enter Code..." />
-      <input class="hugo-encryptor-button btn btn-light border border-dark" type="button" value="Unlock Lab Lesson"
+      <input class="hugo-encryptor-button btn btn-success" type="button" value="Unlock Lab Lesson"
         onclick="_click_handler(this)" />
     </div>
   </div>

@@ -10,10 +10,10 @@
     </div>
 
     {{ if .Params.courseName }}
-    <div class="alert alert-success border mt-3">
+    <div class="alert bg-white border border-dark">
         <div class="d-flex align-items-center justify-content-between">
-            <p class="mb-0">This lab is part of the <a class="text-success fw-bold" href="{{ .Params.courseLink }}"><strong>{{ .Params.courseName }}</strong></a> training course.</p>
-            <a class="btn btn-success btn-sm ml-3" href="{{ .Params.courseLink }}">View Course</a>
+            <p class="mb-0">This lab is part of the <a class="warning-link" href="{{ .Params.courseLink }}">{{ .Params.courseName }}</a> training course.</p>
+            <a class="btn btn-primary border btn-sm ml-3" href="{{ .Params.courseLink }}">View Course</a>
         </div>
     </div>
     {{ end }}

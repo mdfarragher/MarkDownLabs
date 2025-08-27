@@ -1,3 +1,48 @@
+/* Override Bootstrap primary button background color */
+.btn-primary {
+    background-color: #AFEB2B !important;
+    border-color: #AFEB2B !important;
+    color: #000000 !important; /* Optional: ensure readable text */
+    border-radius: 6px;
+}
+
+/* Override Bootstrap success button background color */
+.btn-success {
+    background-color: #FA6915 !important;
+    border-color: #FA6915 !important;
+    color: white !important; /* Optional: ensure readable text */
+    border-radius: 6px;
+}
+
+/* Override Bootstrap default fonts */
+@font-face {
+    font-family: 'Inter';
+    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+.btn,
+.table,
+.section-header,
+.item-tile,
+.quiz-option,
+.score-bar-container,
+.score-bar {
+    font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+}
+
+.warning-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+    text-decoration-color: #FA6915
+  }
+
+
 .section-header {
     /* text-align: center; */
     margin-top: 40px;
@@ -45,6 +90,11 @@
     height: 28px; 
 }
 
+.progress .progress-bar {
+    background-color: #AFEB2B;
+    color: black;
+}
+
 /* Apply Bootstrap table styles to all tables */
 table {
     width: auto;
@@ -80,6 +130,26 @@ table tbody + tbody {
 /* code previews */
 pre {
     padding: 8px;
+}
+
+/* Course box */
+.course-box {
+  display: flex;
+  align-items: top;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #AFEB2B; 
+  border: 1px solid #FA6915; 
+  border-radius: 0.25rem;
+  color: black; 
+  font-style: italic;
+}
+.prompt::before {
+  content: '\F484'; /* megaphone */
+  font-family: "bootstrap-icons";
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  font-style: normal;
 }
 
 /* AI agent prompt box */
