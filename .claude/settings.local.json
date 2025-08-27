@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "C:\\Users\\mdfar\\Source"
+    ],
+    "allow": [
+      "Bash(sed:*)"
+    ]
+  }
+}
