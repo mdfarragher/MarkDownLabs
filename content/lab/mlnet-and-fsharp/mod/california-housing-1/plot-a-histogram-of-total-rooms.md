@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 40
 ---
 
-# Plot A Histogram Of Total Rooms
-
 Before you build a machine learning model, it's important to understand your data visually. Just looking at the numbers, like you did in the previous lesson, may not be enough. A good chart can clearly reveal patterns in the dataset.
 
 In this section, you'll going to build a visualization to detect any outliers in the **total_rooms** feature.
@@ -17,7 +15,7 @@ Let's get started.
 
 #### Install ScottPlot
 
-ScottPlot is a very nice plotting and visualization library for C# and NET that can go toe-to-toe with Python libraries like matplotlib and seaborn. We will use it in these labs whenever we want to visualize a dataset.
+ScottPlot is a very nice plotting and visualization library for F# and NET that can go toe-to-toe with Python libraries like matplotlib and seaborn. We will use it in these labs whenever we want to visualize a dataset.
 
 First, let's install the ScottPlot NuGet package. In your terminal (inside the CaliforniaHousing folder), install ScottPlot like this:
 
@@ -60,80 +58,76 @@ A thing you'll want to check is how the generated code loads the CSV file. The c
 You should see the following data loading code in your project:
 
 ```fsharp
-// Get the path to the CSV file
-let projectDirectory = Directory.GetCurrentDirectory()
-let dataPath = Path.Combine(projectDirectory, "California-Housing.csv")
+// Set up a data loader
+let mlContext = new MLContext()
+let loader =
+    mlContext.Data.CreateTextLoader(
+        columns = [|
+            TextLoader.Column("row_id", DataKind.Single, 0)
+            TextLoader.Column("longitude", DataKind.Single, 1)
+            TextLoader.Column("latitude", DataKind.Single, 2)
+            TextLoader.Column("housing_median_age", DataKind.Single, 3)
+            TextLoader.Column("total_rooms", DataKind.Single, 4)
+            TextLoader.Column("total_bedrooms", DataKind.Single, 5)
+            TextLoader.Column("population", DataKind.Single, 6)
+            TextLoader.Column("households", DataKind.Single, 7)
+            TextLoader.Column("median_income", DataKind.Single, 8)
+            TextLoader.Column("median_house_value", DataKind.Single, 9)
+        |],
+        hasHeader = true,
+        separatorChar = ','
+    )
 
-// Create ML context
-let mlContext = MLContext()
+let dataView = loader.Load("California-Housing.csv")
 
-// Load data from CSV
-printfn "Loading data from CSV file..."
-let dataView = mlContext.Data.LoadFromTextFile<HousingData>(
-    path = dataPath,
-    hasHeader = true,
-    separatorChar = ',')
-
-// Extract the total_rooms column into an array
-printfn "Extracting total_rooms data..."
-let totalRoomsColumn = 
-    mlContext.Data.CreateEnumerable<HousingData>(dataView, reuseRowObject = false)
-    |> Seq.map (fun row -> row.TotalRooms)
-    |> Array.ofSeq
+// Extract total_rooms column
+let totalRooms =
+    mlContext.Data.CreateEnumerable<HousingData>(dataView, reuseRowObject=false)
+    |> Seq.map (fun row -> float row.total_rooms)
+    |> Seq.toArray
 ```
 
-This code uses `LoadFromTextFile` to load the CSV file into a data view, which can be used for later machine learning training and evaluation. The code uses a helper class `HousingData` which represents a single row in the dataset.
+This code calls `CreateTextLoader` to set up a text data loader with the correct column names and indices, and then calls the `Load` function to load the CSV file into a data view. 
 
-The code then uses `CreateEnumerable` to convert the loaded data into an enumeration of `HousingData` instances, and F# pipeline operators to convert that to a `float32[]` containing only the TotalRooms values.
+Finally, the code calls `CreateEnumerable` to convert the data view into an enumeration of `HousingData` instances. The `map` function extracts the **total_rooms** column and converts it to a `float`, and `toArray` converts the enumeration to a `float[]` array.
 
-This implementation is by the book, and exactly what we want to see in auto-generated machine learning code that uses Microsoft.ML.
+This implementation is by the book, and exactly what we want to see in auto-generated F# machine learning code that uses Microsoft.ML.
 { .tip }
 
-This is what the HousingData record type looks like:
+This is what the `HousingData` type looks like:
 
 ```fsharp
-// Data model for California housing dataset
-open Microsoft.ML.Data
-
+// Define the data schema
 [<CLIMutable>]
 type HousingData = {
-    [<LoadColumn(0)>] CsvRowId: float32
-    [<LoadColumn(1)>] Longitude: float32
-    [<LoadColumn(2)>] Latitude: float32
-    [<LoadColumn(3)>] HousingMedianAge: float32
-    [<LoadColumn(4)>] TotalRooms: float32
-    [<LoadColumn(5)>] TotalBedrooms: float32
-    [<LoadColumn(6)>] Population: float32
-    [<LoadColumn(7)>] Households: float32
-    [<LoadColumn(8)>] MedianIncome: float32
-    [<LoadColumn(9)>] MedianHouseValue: float32
+    row_id: float32
+    longitude: float32
+    latitude: float32
+    housing_median_age: float32
+    total_rooms: float32
+    total_bedrooms: float32
+    population: float32
+    households: float32
+    median_income: float32
+    median_house_value: float32
 }
 ```
 
-Each column in the dataset is implemented as a property, with the correct data type, and annotated with a `LoadColumn` attribute that specifies the corresponding CSV column index, starting from zero.
+Each column in the dataset is implemented as a field, with a matching name and the correct data type.
 
-If instead you get generated code that uses `File.ReadAllLines` or `Microsoft.VisualBasic.FileIO.TextFieldParser` to manually load the CSV file, you may want to adjust your prompt and explicitly ask for code that uses `LoadFromTextFile` to load the data.
+If instead you get generated code that uses `File.ReadAllLines` to manually load the CSV file, you may want to adjust your prompt and explicitly ask for code that uses `LoadFromTextFile` to load the data.
 
 We want to keep our code elegant and lean. The Microsoft.ML library has built-in support for loading CSV files, so we don't want to import additional packages that clutter up our codebase.
 { .tip }
 
-You may get an issue where the agent struggles with the ScottPlot 5 syntax and tries to generate code for earlier versions. That code will not compile and you'll get errors for the source lines that set up and plot the histogram.
-
-This can happen, because AI agents are trained on data up until a specific cutoff point, and libraries may have changed their APIs after this date. In my testing, I noticed that at the time of this writing (June 2025), Claude 3.7 was unaware of the new syntax and would get stuck in a loop trying to fix my code. I had to abort the agent and fix the code manually.
-
-For reference, [this is how to create a histogram In ScottPlot 5](https://www.scottplot.net/cookbook/5.0/Histograms/).
-
 Here is the plotting code I ended up with:
 
 ```fsharp
-// Convert float array to double array (required by ScottPlot 5)
-let doubleData = totalRoomsColumn |> Array.map (fun x -> double x)
-
 // Create a new plot
-let plot = Plot()
+let plot = new Plot()
 
 // Create a histogram
-let hist = ScottPlot.Statistics.Histogram.WithBinCount(10, doubleData)
+let hist = ScottPlot.Statistics.Histogram.WithBinCount(10, totalRooms)
 
 // Add the bars to the plot
 let barPlot = plot.Add.Bars(hist.Bins, hist.Counts)
@@ -143,15 +137,13 @@ for bar in barPlot.Bars do
     bar.Size <- hist.FirstBinSize * 0.8
 
 // Customize appearance
-plot.Title("Total Rooms Histogram") |> ignore
-plot.XLabel("Total Rooms") |> ignore
-plot.YLabel("Frequency") |> ignore
+plot.Title("Histogram of Total Rooms")
+plot.XLabel("Total Rooms")
+plot.YLabel("Frequency")
 
 // Save the plot
-plot.SavePng("histogram.png", 600, 400)
+plot.SavePng("totalrooms-histogram.png", 600, 400) |> ignore
 ```
-
-Note the first line, it converts the `totalRoomsColumn` (a `float[]` with all the **total_rooms** values) to `double[]`, because ScottPlot histograms work with double values.
 
 Now let's look at the histogram. It should look like this:
 

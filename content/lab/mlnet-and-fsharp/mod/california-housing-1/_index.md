@@ -6,7 +6,7 @@ layout: "single"
 image: mod-calhousing-1.jpg
 sortKey: 20
 ---
-In this lab, you're going to write an app in C# that use feature engineering to process the data in a machine learning dataset.
+In this lab, you're going to write an app in F# that use feature engineering to process the data in a machine learning dataset.
 
 You'll use the California Housing Dataset, which is famous for its use in many machine learning courses. But the dataset has several issues that you'll need to discover and deal with before you can train a machine learning model on the data    .
 

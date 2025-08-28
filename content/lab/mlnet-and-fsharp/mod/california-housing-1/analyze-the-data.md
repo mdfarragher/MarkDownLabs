@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 30
 ---
 
-# Analyze The Data
-
 We'll begin by analyzing the California Housing dataset and come up with a plan for feature engineering. You won't write any F# code yet, our goal is to first map out all required data transformation steps to make later machine learning training possible.
 
 {{< encrypt >}}

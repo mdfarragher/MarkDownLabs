@@ -1,5 +1,5 @@
 ---
-title: "Build Apps With ML.NET And F#"
+title: "Build Machine Learning Apps in F# With Microsoft ML.NET"
 description: "Build Machine Learning Applications In F# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
@@ -7,8 +7,8 @@ image: lab-mlnet-csharp.jpg
 hideLab: true
 
 courseName: "Supervised Machine Learning with ML.NET and F#"
-courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-csharp"
-keyLink: "https://www.mdft.academy/lab-mlnet-and-csharp"
+courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-fsharp"
+keyLink: "https://www.mdft.academy/lab-mlnet-and-fsharp"
 
 password: "Immutable8-Option2-Pattern5-Record1-Provider1"
 ---

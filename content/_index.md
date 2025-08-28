@@ -1,5 +1,5 @@
 ---
-title: "MarkDown Practice Labs"
+title: "MarkDown Labs"
 description: "Sharpen your tech skills with these practice labs"
 type: "lab"
 layout: "list"

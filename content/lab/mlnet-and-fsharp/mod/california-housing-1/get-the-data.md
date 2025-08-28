@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 20
 ---
 
-# Get The Data
-
 Let's start by downloading the California Housing dataset. 
 
 {{< encrypt >}}
@@ -59,13 +57,6 @@ dotnet add package Microsoft.ML
 ```
 
 **Microsoft.ML** is the Microsoft MLNET machine learning library. We will use it to build all our applications in this course.
-
-F# differs from C# in several important ways:
-- F# uses immutable values by default with `let` bindings
-- F# uses record types instead of classes for simple data structures  
-- F# uses pipeline operators (`|>`) for function composition
-- F# has powerful type inference that reduces boilerplate code
-{ .tip }
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
 

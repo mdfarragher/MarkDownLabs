@@ -1,5 +1,5 @@
 ---
-title: "Build Apps With ML.NET And C#"
+title: "Build Machine Learning Apps In C# With Microsoft ML.NET"
 description: "Build Machine Learning Applications In C# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
