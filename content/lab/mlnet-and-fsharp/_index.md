@@ -1,5 +1,5 @@
 ---
-title: "Build Machine Learning Apps in F# With Microsoft ML.NET"
+title: "Build Machine Learning Apps in F# With ML.NET"
 description: "Build Machine Learning Applications In F# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
