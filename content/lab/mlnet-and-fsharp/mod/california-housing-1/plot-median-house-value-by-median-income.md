@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 50
 ---
 
-# Plot Median House Value By Median Income
-
 In machine learning training, we're looking for features with a balanced distributions of values. Basically, you want the feature histogram to look like a symmetric hump, with flanks on the left and right tapering to zero. 
 
 But do you remember the histogram of the **median_house_value** column from the previous lab lesson? It looks like this:
@@ -24,29 +22,46 @@ Let's explore this a little further by creating a scatterplot of median house va
 
 #### Create a Scatterplot
 
-Before we start, let's remove all the old code we don't need anymore. The data loading code can stay but we'll delete all the plotting code because we don't want the agent to get confused.
-
-Always remove dead code, incorrect code, or workarounds you don't agree with from the code base before giving your agent the next assignment. This keeps your code clean and prevents the agent from going off the rails.
-{ .tip }
-
-Delete any code you don't need anymore, and don't worry about compile errors. The agent can fix those in the next pass.
-
-Another trick you can use is to add the following comment in your Program.fs file at the point where you want the agent to add new code:
-
-```fsharp
-// the rest of the code goes here
-```
-
-This will guide the agent to the correct location in your code base where you want to add new code.
-
-Now enter the following prompt:
+Enter the following prompt:
 
 "Write F# code using ScottPlot to generate a scatterplot of the median house value column versus the median income column."
 { .prompt }
 
-Inspect your new code. Make sure the agent uses `Plot.Add.ScatterPoints` instead of `Plot.Add.Scatter`, because the latter draws lines between the data points, and we don't want that here.
+You will probably get code that looks like this:
 
-For reference, [here is the ScottPlot documentation on scatterplots](https://www.scottplot.net/cookbook/5.0/Scatter/).
+```fsharp
+// Extract median_house_value column
+let medianHouseValue =
+    houses
+    |> Seq.map (fun row -> float row.median_house_value)
+    |> Seq.toArray
+
+// Extract median_house_value column
+let medianIncome =
+    houses
+    |> Seq.map (fun row -> float row.median_income)
+    |> Seq.toArray
+```
+
+These two statements are very similar to what you saw in the previous lesson. They use `Seq.map` to extract the **median_house_value** and **median_income** columns from the `houses` array, and `Seq.toArray` to convert the sequence of floats to an array. 
+
+With that in place, the plotting code is very simple and looks like this:
+
+```fsharp
+// Create a scatterplot
+let scPlot = new Plot()
+scPlot.Add.ScatterPoints(medianIncome, medianHouseValue) |> ignore
+
+// Customize appearance
+scPlot.Title("Median House Value vs Median Income")
+scPlot.XLabel("Median Income")
+scPlot.YLabel("Median House Value")
+
+// Save the plot
+scPlot.SavePng("income-vs-housevalue.png", 600, 400) |> ignore
+```
+
+Note the use of `|> ignore`, which discards function return values that we don't actually use. Without these statements, the compiler would generate warnings. 
 
 You should get a plot that looks like this:
 

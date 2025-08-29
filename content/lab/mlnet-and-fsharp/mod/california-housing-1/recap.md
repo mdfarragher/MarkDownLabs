@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 90
 ---
 
-# Recap
-
 Congratulations on finishing the lab. Here's what you have learned.
 
 {{< encrypt >}}

@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 70
 ---
 
-# Design And Build The Transformation Pipeline
-
 Now let's start designing the ML.NET data transformation pipeline. This is the sequence of feature engineering steps that will transform the dataset into something suitable for a machine learning algorithm to train on.
 
 {{< encrypt >}}
@@ -47,10 +45,10 @@ If you decided to remove outliers, for example by removing any rows that have **
 
 ```fsharp
 // Filter out outliers with Population > 5000
-let filteredData = mlContext.Data.FilterRowsByColumn(dataView, nameof<HousingData>.Population, upperBound = 5000.0)
+let filteredData = mlContext.Data.FilterRowsByColumn(dataView, "population", upperBound = 5000.0)
 
 // Filter out expensive houses with MedianHouseValue > 499999
-let filteredData2 = mlContext.Data.FilterRowsByColumn(filteredData, nameof<HousingData>.MedianHouseValue, upperBound = 499999.0)
+let filteredData2 = mlContext.Data.FilterRowsByColumn(filteredData, "median_house_value", upperBound = 499999.0)
 ```
 
 The `FilterRowsByColumn` method is a great tool to quickly filter a dataview by a specific column. You can specify upper- and lower bounds for filtering.
@@ -60,54 +58,59 @@ The `FilterRowsByColumn` method is a great tool to quickly filter a dataview by 
 If you decided to create a new computed column like **RoomsPerPerson**, you'll notice a new class definition in your code:
 
 ```fsharp
-// Type to hold transformed data including the computed column
+// Type to hold transformed data
 [<CLIMutable>]
 type TransformedHousingData = {
-    inherit HousingData
-    RoomsPerPerson: float32
+    mutable longitude: float32
+    mutable latitude: float32
+    mutable housing_median_age: float32
+    mutable median_income: float32
+    mutable median_house_value: float32
+
+    mutable rooms_per_person: float32
 }
 ```
 
-This is a new helper class that holds a single row in the transformed dataset, with an extra property for the **RoomsPerPerson** column.
+This is a new helper class that holds a single row in the transformed dataset, with an extra property for the **rooms_per_person** column. Also note the `mutable` keywords that make each field mutable, this is a requirement for what comes next.
 
 Your pipeline would then be built as follows:
 
 ```fsharp
-// Compute RoomsPerPerson
-let pipeline = mlContext.Transforms.CustomMapping<HousingData, TransformedHousingData>(
-    System.Action<HousingData, TransformedHousingData>(fun input output ->
-        output.Longitude <- input.Longitude
-        output.Latitude <- input.Latitude
-        output.HousingMedianAge <- input.HousingMedianAge
-        output.TotalRooms <- input.TotalRooms
-        output.TotalBedrooms <- input.TotalBedrooms
-        output.Population <- input.Population
-        output.Households <- input.Households
-        output.MedianIncome <- input.MedianIncome
-        output.MedianHouseValue <- input.MedianHouseValue
-        output.RoomsPerPerson <- if input.Population > 0.0f then input.TotalRooms / input.Population else 0.0f
-    ),
-    "RoomsPerPersonMapping")
+// Set up pipeline to transform data  
+let pipeline = 
+    EstimatorChain()
+
+        // Add the rooms_per_person custom field
+        .Append(mlContext.Transforms.CustomMapping<HousingData, TransformedHousingData>(
+            (fun input output ->
+                output.longitude <- input.longitude
+                output.latitude <- input.latitude  
+                output.housing_median_age <- input.housing_median_age
+                output.median_income <- input.median_income
+                output.median_house_value <- input.median_house_value
+                output.rooms_per_person <- if input.population > 0.0f then input.total_rooms / input.population else 0.0f
+            ),
+            "RoomsPerPersonMapping"))
 ```
 
-The `CustomMapping` transformation uses two class types and a lambda expression to transform the original data and add the new **RoomsPerPerson** column.
+The `CustomMapping` transformation uses a function to convert data from `HousingData` to `TransformedHousingData` and add the new **rooms_per_person** column. Note that each field in `TransformedHousingData` has to be set to mutable for the assignments to work.
 
 #### Bin- and one-hot encode latitude and longitude
 
-If you decided to bin- and one-hot encode **Latitude** and **Longitude**, you'll notice two extra properties in the TransformedHousingData class:
+If you decided to bin- and one-hot encode **latitude** and **longitude**, you'll notice two extra properties in the TransformedHousingData class:
 
 ```fsharp
-// Type to hold transformed data including the computed column
+// Type to hold transformed data
 [<CLIMutable>]
 type TransformedHousingData = {
-    inherit HousingData
-    
-    // Added properties for transformed columns
-    [<VectorType(10)>]
-    LatitudeEncoded: float32[]
-    
-    [<VectorType(10)>]
-    LongitudeEncoded: float32[]
+    mutable longitude: float32
+    mutable latitude: float32
+    mutable housing_median_age: float32
+    mutable median_income: float32
+    mutable median_house_value: float32
+
+    [<VectorType(10)>] mutable latitude_encoded: float32[]
+    [<VectorType(10)>] mutable longitude_encoded: float32[]
 }
 ```
 
@@ -116,21 +119,22 @@ These properties will hold the transformed latitude and longitude, after they ha
 In the main code, you'll find the following transformations:
 
 ```fsharp
-// Bin and one-hot encode Latitude and Longitude
+// Bin and one-hot encode latitude and longitude
+pipeline
     .Append(mlContext.Transforms.NormalizeBinning(
-        outputColumnName = "LatitudeBinned",
-        inputColumnName = nameof<HousingData>.Latitude,
+        outputColumnName = "latitude_binned",
+        inputColumnName = "latitude",
         maximumBinCount = 10))
     .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-        outputColumnName = nameof<TransformedHousingData>.LatitudeEncoded,
-        inputColumnName = "LatitudeBinned"))
+        outputColumnName = "latitude_encoded",
+        inputColumnName = "latitude_binned"))
     .Append(mlContext.Transforms.NormalizeBinning(
-        outputColumnName = "LongitudeBinned",
-        inputColumnName = nameof<HousingData>.Longitude,
+        outputColumnName = "longitude_binned",
+        inputColumnName = "longitude",
         maximumBinCount = 10))
     .Append(mlContext.Transforms.Categorical.OneHotEncoding(
-        outputColumnName = nameof<TransformedHousingData>.LongitudeEncoded,
-        inputColumnName = "LongitudeBinned"))
+        outputColumnName = "longitude_encoded",
+        inputColumnName = "longitude_binned"))
 ```
 
 The `NormalizeBinning` transformation bins the latitude and longitude columns into 10 bins of equal size, and `OneHotEncoding` performs one-hot encoding on these bin numbers to create a 10-element vector of zeroes and ones.
@@ -141,13 +145,10 @@ If you decided to normalize any columns in the dataset, it will look like this:
 
 ```fsharp
 // Normalize all columns except Latitude, Longitude and MedianHouseValue
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.HousingMedianAge))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.TotalRooms))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.TotalBedrooms))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.Population))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.Households))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<HousingData>.MedianIncome))
-    .Append(mlContext.Transforms.NormalizeMinMax(nameof<TransformedHousingData>.RoomsPerPerson))
+pipeline
+    .Append(mlContext.Transforms.NormalizeMinMax("housing_median_age"))
+    .Append(mlContext.Transforms.NormalizeMinMax("median_income"))
+    .Append(mlContext.Transforms.NormalizeMinMax("rooms_per_person"))
 ```
 
 This stack of transformations will normalize every column except **MedianHouseValue**, **Latitude** and **Longitude**.
@@ -159,14 +160,12 @@ To actually perform the transformations and get access to the transformed data, 
 
 ```fsharp
 // Apply the pipeline to the filtered data
-printfn "Applying transformations..."
-let transformModel = pipeline.Fit(filteredData2)
-let transformedData = transformModel.Transform(filteredData2)
+let model = pipeline.Fit(filteredData2)
+let transformedData = model.Transform(filteredData2)
 
 // Convert to enumerable to verify transformations
 let transformedHousingData = 
-    mlContext.Data.CreateEnumerable<TransformedHousingData>(
-        transformedData, reuseRowObject = false)
+    mlContext.Data.CreateEnumerable<TransformedHousingData>(transformedData, reuseRowObject = false)
     |> Seq.toList
 ```
 
@@ -179,7 +178,7 @@ My Claude 3.7 agent added a bit of extra code after the pipeline to output a sam
 ![Pipeline Run Output](../img/pipeline-run.png)
 { .img-fluid .mb-4 }
 
-You can see that I decided to remove outliers by getting rid of all rows with a population larger than 5000. There were 265 housing blocks matching that condition in the dataset. The new computed column **RoomsPerPerson** has a numeric range from 0.0019 to 1.0, this is because I normalized all columns, including this one. And in the sample row, you can clearly see that the latitude and longitude values have been one-hot encoded into 10-element numerical vectors.
+You can see that I decided to remove outliers by getting rid of all rows with a population larger than 5000, and all houses with a value greater than $499,999. There were 265 overpopulated and 831 overvalued housing blocks matching those conditions in the dataset. The new computed column **rooms_per_person** has a numeric range from 0.0019 to 1.0, this is because I normalized the columns. And in the sample row, you can clearly see that the latitude and longitude values have been one-hot encoded into 10-element numerical vectors.
 
 Everything seems to be working.
 

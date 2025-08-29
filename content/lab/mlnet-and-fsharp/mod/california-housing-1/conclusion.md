@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 100
 ---
 
-# Conclusion
-
 This concludes the section on feature engineering. 
 
 You now have some hands-on experience scrubbing, scaling, transforming, binning, one-hot encoding and crossing feature data with ML.NET and F#. You'll use these skills in later labs to optimize your machine learning predictions.

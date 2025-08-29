@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 60
 ---
 
-# Plot The Pearson Correlation Matrix
-
 When you train a machine learning model on a dataset, you always face the challenge of deciding which columns to include in the training.
 
 You only want to include columns that are uncorrelated with each other. This means that the columns behave independently from one another, and do not increase or decrease together.
@@ -24,17 +22,11 @@ So let's write some code (= have Copilot write it for us) to calculate the corre
 
 #### Set Up a Code Structure
 
-In Visual Studio Code, remove all unwanted code from the Program.fs file, and then create the following code structure right after the data loading code:
+In Visual Studio Code, add the following code at the end of your **Program.fs** file:
 
 ```fsharp
-// get column names
-let columnNames = 
-    typeof<HousingData>.GetProperties()
-    |> Array.filter (fun p -> p.Name <> "CsvRowId")
-    |> Array.map (fun p -> p.Name)
-
 // Calculate the correlation matrix
-let matrix = CalculateCorrelationMatrix<HousingData>(housingData, columnNames)
+let matrix = CalculateCorrelationMatrix<HousingData>(houses, columnNames)
 
 // print correlaton matrix
 PrintCorrelationMatrix(matrix, columnNames)
@@ -43,66 +35,85 @@ PrintCorrelationMatrix(matrix, columnNames)
 PlotCorrelationMatrix(matrix, columnNames)
 ```
 
-This creates a nice scaffold for the agent to work with. We set up an array of column names (using reflection), and then call `CalculateCorrelationMatrix` to calculate the Pearson correlation matrix. The method is generic so we can reuse it in other projects.
-
-You may be wondering why we calculate the `columnNames` array at all? It's to ensure that `PrintCorrelationMatrix` and `PlotCorrelationMatrix` use the exact same column list and present the columns in the exact same order.
+This creates a nice scaffold for the agent to work with. We already have the array of dataset column names in `columnNames` and the array of `HousingData` instances in `houses`. The three lines of code calculate the Pearson correlation matrix, print the matrix on the console, and plot the matrix as a heatmap. 
 
  A code scaffold is a great trick to run your agent incrementally, asking it to implement each method in turn. It also forces the agent to use the same data every time, ensuring that the final code works as expected.
  { .tip }
 
-Now we can ask the agent to implement the `CalculateCorrelationMatrix`, `PrintCorrelationMatrix` and `PlotCorrelationMatrix` methods for us.
+Now we can ask the agent to implement the `CalculateCorrelationMatrix`, `PrintCorrelationMatrix` and `PlotCorrelationMatrix` methods for us. Let's do them one by one.
 
 #### Calculate the Correlation Matrix
 
 Enter the following prompt in Copilot:
 
-"Implement the CalculateCorrelationMatrix function with F# that calculates the Pearson correlation matrix for all columns in the dataset. Use MathNet.Numerics to calculate the matrix."
+"Implement the CalculateCorrelationMatrix function with F# code that calculates the Pearson correlation matrix for all columns in the dataset. Use reflection to access each field in the HousingData type, and MathNet.Numerics to calculate the correlation matrix."
 { .prompt }
 
 Note how we're guiding the agent by explicitly mentioning **MathNet.Numerics**? We do that, because the Numerics library is the easiest way to calculate a correlation matrix. We can use other libraries (like Deedle or NumSharp), but with Numerics we only need a single call to `Correlation.PearsonMatrix` to calculate the matrix!
 
-If you have a preference for a specific library, mention this in your prompt. This is much better than having the agent pick a library at random and possibly generate convoluted code to make everything work. 
+If you have a preference for a specific library, mention this in your prompt. This is much better than having the agent pick a library at random and write convoluted code to make everything work. 
 { .tip }
 
-When I ran Copilot on this prompt, I got a pile of non-reusable code with hardcoded column names everywhere and a ton of local variables to build the jagged `double[][]` array for the correlation matrix.
-
-So I decided I hated it, deleted all the code and wrote this instead:
+Your prompt should produce code similar to this:
 
 ```fsharp
-let CalculateCorrelationMatrix<'T> (data: 'T list) (featureColumns: string[]) =
+let CalculateCorrelationMatrix<'T> (data: 'T[]) (featureColumns: string[]) =
+
     // Build a jagged array where each inner array is a feature column
     let matrix = 
         featureColumns
-        |> Array.map (fun col ->
-            let prop = typeof<'T>.GetProperty(col)
+        |> Array.map (fun column ->
             data
-            |> List.map (fun h -> Convert.ToDouble(prop.GetValue(h)))
-            |> List.toArray
+            |> Array.map (fun row -> Convert.ToDouble(typeof<'T>.GetProperty(column).GetValue(row)))
         )
-        |> Array.toList
 
     // Calculate correlation matrix for the feature columns
     Correlation.PearsonMatrix(matrix)
 ```
 
-My handwritten code uses reflection to access each data column in turn. Then a `foreach` loop builds the jagged array of doubles I need to calculate the correlation matrix. This is much shorter and much more elegant than what the agent generated, it is completely reusable and can be used for any dataset.
-
-Don't hesitate to get your hands dirty and completely rewrite sections of agent-generated code. Treat your AI agent as a junior developer who sometimes gets it wrong and needs to be corrected by a more senior peer. 
-{ .tip }
+Note the nested `Array.map` calls that build an array of floats for every field in the `'T` type. This jagged array is then passed on to `Correlation.PearsonMatrix` to calculate the correlation matrix.
 
 #### Print the Correlation Matrix
 
 Now ask the agent to implement the next method:
 
-"Implement the PrintCorrelationMatrix function to print a nice matrix on the console using unicode lines. Use the BetterConsoleTables package."
+"Implement the PrintCorrelationMatrix function with the BetterConsoleTables package to print a nice correlation matrix on the console. Annotate each correlation factor like this: <br> '++/--' for a strong positive/negative correlation (|r| > 0.7) <br> '+/-' for a moderate positive/negative correlation (0.4 < |r| < 0.7) <br> '~' for a very weak or no correlation (|r| < 0.2) <br> (no symbol) for a weak correlation (0.2 < |r| < 0.4)"
 { .prompt }
 
-You should get something like this:
+Your AI agent will generate code that might look like this:
+
+```fsharp
+let PrintCorrelationMatrix (mathNetMatrix: Matrix<double>) (columnNames: string[]) =
+    let table = new Table(TableConfiguration.Unicode())
+    table.AddColumn("") |> ignore
+    columnNames |> Array.iter (fun col -> table.AddColumn col |> ignore)
+
+    // Helper to annotate correlation
+    let annotate r =
+        if r > 0.7 then "++"
+        elif r > 0.4 then "+"
+        ...
+ 
+    let matrix = mathNetMatrix.ToArray()
+    let n = columnNames.Length
+    for i in 0 .. n-1 do
+        let row =
+            Array.append 
+                [| box columnNames.[i] |]
+                [| for j in 0 .. n-1 ->
+                    let r = matrix.[i,j]
+                    box (sprintf "%.2f %s" r (annotate r))
+                |]
+        table.AddRow(row) |> ignore
+    printfn "%s" (table.ToString())
+```
+
+There are several nice F# techniques in this code. Note the call to `Array.iter` that sets up the table column headers in a single line of code. And further down, `Array.append` joins two arrays together (using the `[| ... |]` syntax): one with only a column name, and one with the correlation factors for that column. This builds up the table, row by row, until the completed table is printed with a `printfn`. 
+
+The correlation matrix looks like this:
 
 ![Correlation Matrix](../img/correlation-console.png)
 { .img-fluid .mb-4 }
-
-My agent went a bit overboard and decided to add extra indicators in each matrix cell to show moderate and strong positive or negative correlation. That's a very nice touch.
 
 You can clearly see that the **TotalRooms**, **TotalBedrooms**, **Population** and **Household** columns are strongly correlated. So we could consider condensing them into a single feature for machine learning training.
 
@@ -115,7 +126,44 @@ Now let's see if Copilot can generate a heatmap for us with ScottPlot:
 "Implement the PlotCorrelationMatrix function to plot a heatmap of the correlation matrix, using ScottPlot."
 { .prompt }
 
-When I ran this prompt, I got a nice heatmap. But closer inspection of the plot revealed several bugs:
+Your AI agent will write code that looks like this:
+
+```fsharp
+let PlotCorrelationMatrix (matrix : Matrix<double>) (featureNames : string[]) =
+
+    // Convert MathNet matrix to 2D array for ScottPlot
+    let correlationArray = matrix.ToArray()
+
+    // Create a heatmap
+    let plot = new Plot()
+    let heatmap = plot.Add.Heatmap(correlationArray)
+    heatmap.Colormap <- Colormaps.Turbo()
+    let colorbar = plot.Add.ColorBar(heatmap)
+    plot.Title("Feature Correlation Matrix")
+
+    // Configure X-axis ticks with feature names
+    let n = featureNames.Length
+    plot.Axes.Bottom.TickGenerator <- TickGenerators.NumericManual(
+        [| 0 .. n-1 |] |> Array.map (fun v -> double v),
+        labels = featureNames)
+
+    // Configure Y-axis ticks with feature names
+    plot.Axes.Left.TickGenerator <- new TickGenerators.NumericManual(
+        [| 0 .. n-1 |] |> Array.map (fun v -> double v),
+        labels = featureNames)
+
+    // Add text annotations for correlation values
+    for i = 0 to matrix.RowCount-1 do
+        for j = 0 to matrix.ColumnCount-1 do
+            let value = matrix.[i, j]
+            let text = value.ToString("F2")
+            let annotation = plot.Add.Text(text, j, i)
+    plot
+```
+
+Note the two `Tickgenerators` for adding the correct labels to the x- and y-axis. We also add a nice `ColorBar` to the right edge of the plot with the `Turbo` color scale. And the nested loop at the bottom adds text to each cell of the heatmap.
+
+But when I ran this code, I got a heatmap with several mistakes:
 
 -    The numbers in the heatmap did not correspond to the colors of the cells
 -    The colored backgrounds were offset by 0.5 in each cell
@@ -123,17 +171,11 @@ When I ran this prompt, I got a nice heatmap. But closer inspection of the plot 
 After some hacking, I discovered that both axes of the heatmap needed to be shifted by -0.5, and that the vertical axis of the heatmap needs to be in reverse order for the plot to make sense. Here's how you do that:
 
 ```fsharp
-// Set the axis limits to show the full heatmap
-// plot.Axes.SetLimits(0, featureNames.Length, 0, featureNames.Length)
-plot.Axes.SetLimits(-0.5, float featureNames.Length - 0.5, float featureNames.Length - 0.5, -0.5)
+    // Flip the y-axis and shift all ticks by 0.5
+    plot.Axes.SetLimits(-0.5, float (featureNames.Length) - 0.5, float (featureNames.Length) - 0.5, -0.5)
 ```
 
-I left the original agent-generated line in, so you can see the changes I made. I reversed the vertical axis, and shifted both axes by -0.5 to line up the tick marks with the heatmap cells.
-
-Despite repeated prompting, my Claude 3.7 agent was unable to fix this bug and kept getting stuck generating code for the wrong version of ScottPlot.
-
- Always double-check the output of your agent-generated code. My initial heatmap looked perfectly fine at first glance, and only after a closer inspection did I notice that the numbers didn't make sense. 
- { .tip }
+So always double-check the output of your agent-generated code. My initial heatmap looked perfectly fine at first glance, and only after a closer inspection did I notice that the numbers didn't make sense. 
 
 Here is the final heatmap in all its glory:
 
@@ -150,31 +192,46 @@ For machine learning, we are most interested in what correlates with **MedianHou
 
 We'll return to the correlation matrix in later lessons, so this is a good moment to preserve your work.
 
-In Visual Studio Code, select the implementation of the `CalculateCorrelationMatrix`, `PrintCorrelationMatrix` and `PlotCorrelationMatrix` methods (plus any associated helper methods).
-
-Then press CTRL+I to launch the in-line AI prompt window, and type the following prompt:
-
-"Move all of this code to a separate utility module called CorrelationUtils."
-{ .prompt }
-
-This will produce a new class file called `CorrelationUtils`, with all of the code for creating, printing and plotting the correlation matrix. You can now use this class in other projects.
-
-When you're happy with generated code and you want to keep it, move it aside into separate class files. That keeps your main code file (Program.fs) clean and ready for the next agent experiment.
-{ .tip }
-
-And if you want to clean up your code and make it as side-effect-free as possible, you can edit `PlotCorrelationMatrix` and have it return the `Plot` instance. You can then save the grid in the main program class instead. Your main calling code will then look like this:
+In Visual Studio Code, create a new **CorrelationUtils.fs** file and copy the implementation of the `CalculateCorrelationMatrix`, `PrintCorrelationMatrix` and `PlotCorrelationMatrix` methods into it. Make sure the file starts like this:
 
 ```fsharp
-// plot correlation heatmap
-let plot = PlotCorrelationMatrix(matrix, columnNames)
+module CorrelationUtils
 
-// Save the plot to a file
-plot.SavePng("correlation_heatmap.png", 900, 800)
+open ScottPlot
+open MathNet.Numerics.Statistics
+open MathNet.Numerics.LinearAlgebra
+open BetterConsoleTables
+open System
 ```
 
-If you get stuck or want to save some time, feel free to download my completed CorrelationUtils class from Codeberg and use it in your own project:
+The `module` keyword on the first line defines a new F# module called **CorrelationUtils**. We can now use this module in any other file by simply putting `open CorrelationUtils` at the top of the file. 
 
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/CaliforniaHousing/CorrelationUtils.cs
+So go ahead and add this line to the top of your **Program.fs** file:
+
+```fsharp
+open CorrelationUtils
+```
+
+There's one more thing we need to do. The F# compiler does not automatically determine the order of compilation to prevent dependency conflicts. You have to set this order manually, in this case by specifying that **CorrelationUtils.fs** needs to be compiled before **Program.fs**. 
+
+You specify the compilation order in the **CaliforniaHousing.fsproj** project file, like this:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Include="CorrelationUtils.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
+```
+
+The **ItemGroup** element lists all F# project files in the exact order in which they will be compiled. So make sure to put any modules near the top of the list.  
+
+If you get stuck or want to save some time, feel free to download my completed CorrelationUtils module from Codeberg and use it in your own project:
+
+https://codeberg.org/mdft/ml-mlnet-fsharp/src/branch/main/CaliforniaHousing/CorrelationUtils.fs
 
 #### Summary
 

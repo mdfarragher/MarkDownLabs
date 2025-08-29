@@ -48,14 +48,10 @@ At the bottom of the Copilot panel in Visual Studio Code, make sure the AI mode 
 
 Now enter the following prompt:
 
-"Write F# code using ScottPlot to generate a histogram of the total_rooms column from the CSV file."
+"Write F# code using ScottPlot to generate a histogram of the total_rooms column from the CSV file. Use the LoadFromTextFile function in ML.NET to load the file."
 { .prompt }
 
-And let Copilot write the code for you.
-
-A thing you'll want to check is how the generated code loads the CSV file. The correct approach is to use the method `LoadFromTextFile`, which is part of the Microsoft.ML library.
-
-You should see the following data loading code in your project:
+And let Copilot write the code for you. You should see the following data loading code in your project:
 
 ```fsharp
 // Set up a data loader
@@ -78,6 +74,7 @@ let loader =
         separatorChar = ','
     )
 
+// Load the dataset
 let dataView = loader.Load("California-Housing.csv")
 
 // Extract total_rooms column
@@ -89,10 +86,12 @@ let totalRooms =
 
 This code calls `CreateTextLoader` to set up a text data loader with the correct column names and indices, and then calls the `Load` function to load the CSV file into a data view. 
 
-Finally, the code calls `CreateEnumerable` to convert the data view into an enumeration of `HousingData` instances. The `map` function extracts the **total_rooms** column and converts it to a `float`, and `toArray` converts the enumeration to a `float[]` array.
+Finally, the code calls `CreateEnumerable` to convert the data view into an enumeration of `HousingData` instances. The `Seq.map` function extracts the **total_rooms** column and converts it to a `float`, and `Seq.toArray` converts the final sequence of floats to an array.
 
 This implementation is by the book, and exactly what we want to see in auto-generated F# machine learning code that uses Microsoft.ML.
 { .tip }
+
+If you had not yet seen the `|>` operator in F#, it's called the **forward pipe** and takes the value on the left hand side and passes it as the last argument into the function on the right hand side. We can use it to chain multiple statements together, in this case `CreateEnumerable`, `Seq.map` and `Seq.toArray`. 
 
 This is what the `HousingData` type looks like:
 
@@ -113,12 +112,7 @@ type HousingData = {
 }
 ```
 
-Each column in the dataset is implemented as a field, with a matching name and the correct data type.
-
-If instead you get generated code that uses `File.ReadAllLines` to manually load the CSV file, you may want to adjust your prompt and explicitly ask for code that uses `LoadFromTextFile` to load the data.
-
-We want to keep our code elegant and lean. The Microsoft.ML library has built-in support for loading CSV files, so we don't want to import additional packages that clutter up our codebase.
-{ .tip }
+Each column in the dataset is implemented as a field, with a matching name and the correct data type. The `CLIMutable` attribute specifies that this type is mutable, meaning the fields can be modified directly without creating an entirely new copy of the type. We need this attribute, because `CreateEnumerable` can only work with mutable types.
 
 Here is the plotting code I ended up with:
 
@@ -163,12 +157,79 @@ Write down which data transformation steps you are going to apply to deal with t
 
 Now let's modify the code to generate histograms for all the columns in the dataset. Enter the following prompt:
 
-"Modify the code so that it creates histograms for every column in the dataset."
+"Write F# code that creates a Scottplot multiplot, where the plots are histograms of every column in the dataset. Arrange the plots in a 3x3 grid."
 { .prompt }
 
-You should get something like this:
+There are many ways to write this code, and the AI agent will probably come up with something decent. But we're going to have to generate many histograms over the course of this training, so I would like to see reusable code here that I can apply to any other dataset in the future. 
 
-![Histogram Of All Columns](../img/all-histograms.png)
+Remember the `HousingData` type we generated earlier to load the dataset? It has all the information we need. Each field represents one column of the dataset and has the same name. So instead of putting a hardcoded list of column names in the code, we should try to get the names directly from the `HousingData` type with a bit of reflection: 
+
+```fsharp
+// Get array of column names
+let columnNames = 
+    typeof<HousingData>.GetProperties()
+    |> Array.map (fun prop -> prop.Name )
+    |> Array.filter (fun name -> name <> "row_id")
+```
+
+This code calls `GetProperties` on the `HousingData` type and uses `Array.map` and `Array.filter` to extract the property names and skip the **row_id** column. This will produce a string array of column names, directly from the HousingData type, without any prior knowledge baked in the code.
+
+The next step is to create a `float[]` array for any given column name, so that we can calculate a histogram from it. We can do that like this:
+
+```fsharp
+// Get array of houses
+let houses = 
+    mlContext.Data.CreateEnumerable<HousingData>(dataView, reuseRowObject=false) 
+    |> Seq.toArray
+
+// Example: get the array of values for total_rooms
+let name = "total_rooms"
+let values = 
+    houses 
+    |> Array.map (fun row -> 
+        Convert.ToDouble(typeof<HousingData>.GetProperty(name).GetValue(row)))
+```
+
+This code first calls `CreateEnumerable` to set up an array of `HousingData` instances. Next, it uses a combination of `map`, `GetProperty` and `GetValue` to access the property we want (**total_rooms**) in every `HousingData` instance and get its value. A final call to `Convert.ToDouble` converts the property value to a `float`.
+
+The end result is that the `values` variable will contain a `float[]` array of every **total_rooms** value in the dataset. We can feed this array directly into `Histogram.WithBinCount` (see below) to set up the histogram. 
+
+And this is how you create a multiplot with Scottplot:
+
+```fsharp
+// Build multiplot (for column names in 'columnNames' )
+let grid = new Multiplot()
+grid.Layout <- new MultiplotLayouts.Grid(columns = 3, rows = 3)
+for name in columnNames do
+
+    // Create a new plot
+    let plot = new Plot()
+
+    // Create array of values
+    let values = 
+        houses 
+        |> Array.map (fun row -> 
+            Convert.ToDouble(typeof<HousingData>.GetProperty(name).GetValue(row)))
+
+    // Add the histogram to the plot as a bar chart
+    let hist = ScottPlot.Statistics.Histogram.WithBinCount(20, values)
+    let barPlot = plot.Add.Bars(hist.Bins, hist.Counts)
+    ....
+
+    // Add the new bar chart to the grid
+    grid.AddPlot(plot)
+```
+
+This code might seem a bit convoluted, and I definitely went off the vibecoding script by discarding the output of my AI agent and writing this code by hand, but I do like the sheer reusability of this code. I can throw in any helper class I want and simply provide a string array of column names to plot a grid of any combination of histograms. Very nice!
+
+In my experience, code generated by AI agents is often very brittle and will only work for the particular scenario it's written for. When I need solid reusable code, I often decide to write everything by hand. And I think you should too.
+
+Don't hesitate to put your AI agent aside and write reusable code by hand. You will probably do a much better job than your AI agent at creating something that you can use again and again. 
+{ .tip } 
+
+Now let's check out the histograms. Your grid should look like this:
+
+![Histogram Of All Columns](../img/histogram-grid.png)
 { .img-fluid .mb-4 }
 
 You can see that the **total_rooms**, **total_bedrooms**, **population** and **household** columns have outliers. These are apartment blocks with a very large number of occupants and rooms, and we'll have to deal with them.
