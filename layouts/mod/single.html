@@ -10,11 +10,15 @@
         <p class="lead mt-3">{{ .Description }}</p>
     </div>
 
-    {{ if .Parent.Params.keyLink }}
+    {{ if .Parent.Params.memberLink }}
     <div class="alert bg-white border border-gray accesskey-warning mt-3 d-none">
         <div class="d-flex align-items-center justify-content-between">
-            <p class="mb-0">You will need an <a class="warning-link text-reset" href="{{ .Parent.Params.keyLink }}"><strong>access code</strong></a> to unlock this lab module.</p>
-            <a class="btn btn-success btn-sm ml-3" href="{{ .Parent.Params.keyLink }}">Get Access Code</a>
+            <p class="mb-0">You need to <a class="warning-link text-reset" href="{{ .Parent.Params.memberLink }}"><strong>subscribe to all-access membership</strong></a>
+                {{ if .Parent.Params.courseLink }}
+                    or <a class="warning-link text-reset" href="{{ .Parent.Params.courseLink }}"><strong>buy the course</strong></a>
+                {{ end }} 
+                to unlock this lab module.</p>
+            <a class="btn btn-success btn-sm ml-3" href="{{ .Parent.Params.memberLink }}">Get Access</a>
         </div>
     </div>
     {{ end }}

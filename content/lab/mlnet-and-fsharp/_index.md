@@ -8,7 +8,7 @@ hideLab: true
 
 courseName: "Supervised Machine Learning with ML.NET and F#"
 courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-fsharp"
-keyLink: "https://www.mdft.academy/lab-mlnet-and-fsharp"
+memberLink: "https://www.mdft.academy/membership"
 
 password: "Immutable8-Option2-Pattern5-Record1-Provider1"
 ---

@@ -10,8 +10,12 @@
   <div class="hugo-encryptor-prompt alert rounded p-3 mb-4 d-none border border-dark bg-white">
     <p class="mb-0">Please provide your access code to unlock and read the remainder of this lesson.
       Your code will be securely stored in your browser, so you only need to enter it once.
-      If you do not have an access code for this lab, you can
-      <a class="warning-link" href="{{ .Page.Parent.Parent.Params.keyLink }}">get one here</a>.
+      If you do not have an access code for this lab, 
+      <a class="warning-link text-reset" href="{{ .Page.Parent.Parent.Params.memberLink }}"><strong>subscribe to all-access membership</strong></a>
+      {{ if .Page.Parent.Parent.Params.courseLink }}
+          or <a class="warning-link text-reset" href="{{ .Page.Parent.Parent.Params.courseLink }}"><strong>buy the course</strong></a>
+      {{ end }} 
+      to get your code.
     </p>
     <div class="hugo-encryptor-form gap-2 align-items-center mt-3">
       <input class="hugo-encryptor-input form-control" type="password" placeholder="Please Enter Code..." />
