@@ -7,7 +7,7 @@ image: lab-mlnet-csharp.jpg
 
 courseName: "Supervised Machine Learning with ML.NET and C#"
 courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-mlnet-and-csharp"
-memberLink: "https://www.mdft.academy/membership"
+memberLink: "https://www.mdft.academy/all-access-membership"
 
 password: "Regression9-Confusion3-Precision4-Correlation5-Bias5"
 ---

@@ -8,7 +8,7 @@ hideLab: true
 
 courseName: "Supervised Machine Learning with Tensorflow.NET and C#"
 courseLink: "https://www.mdft.academy/course-supervised-machine-learning-with-tensorflownet-and-csharp"
-memberLink: "https://www.mdft.academy/membership"
+memberLink: "https://www.mdft.academy/all-access-membership"
 
 password: "Tensor4-Graph8-Placeholder2-Shape1-Variable3"
 ---
