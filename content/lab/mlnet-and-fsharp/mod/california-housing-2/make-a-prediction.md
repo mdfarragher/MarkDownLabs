@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 40
 ---
 
-# Make A Prediction
-
 To wrap up, let's use the model to make a prediction.
 
 We're going to invent a fake housing block in San Francisco, in the middle of the Mission district. The block has 2500 rooms, 1000 bedrooms, houses 500 people and 150 households. The apartments are 10 years old on average, and the normalized median income in that neighborhood is 2.0.
@@ -27,14 +25,13 @@ Enter the following prompt:
 The agent will modify the `TransformedHousingData` class and add a `Score` property to hold the generated prediction:
 
 ```fsharp
-// Type to hold transformed data including the computed column
+// Type to hold transformed data
 [<CLIMutable>]
 type TransformedHousingData = {
-    inherit HousingData
+    mutable longitude: float32
     // ... other properties ...
 
-    // The house value prediction
-    Score: float32
+    mutable Score: float32
 }
 ```
 
@@ -42,26 +39,29 @@ And then it will add code like this to make the prediction:
 
 ```fsharp
 // Create housing block with data from user
-printf "Longitude: "
-let longitude = stdin.ReadLine() |> float32
-printf "Latitude: "
-let latitude = stdin.ReadLine() |> float32
+printf "Total rooms: "
+let rooms = stdin.ReadLine() |> float32
+printf "Total bedrooms: "
+let bedrooms = stdin.ReadLine() |> float32
 // ... continue for other properties ...
 
-let housingBlock = {
-    CsvRowId = 0.0f
-    Longitude = longitude
-    Latitude = latitude
+// Create input data
+let inputData: HousingData = {
+    row_id = 0.0f
+    total_rooms = rooms
+    total_bedrooms = bedrooms
     // ... set other properties from user input ...
 }
 
-// Use the model to predict the median house value
+// Create prediction engine
 let predictionEngine = mlContext.Model.CreatePredictionEngine<HousingData, TransformedHousingData>(model)
-let prediction = predictionEngine.Predict(housingBlock)
-printfn $"Predicted Median House Value: {prediction.Score:F2}"
+
+// Make prediction
+let prediction = predictionEngine.Predict(inputData)
+printfn "Predicted house value: $%.2f" prediction.Score
 ```
 
-The `CreatePredictionEngine` method sets up a prediction engine. The two type arguments are the input data class and the class to hold the prediction.
+The `CreatePredictionEngine` method sets up a prediction engine. The two type arguments are the input data class and the class to hold the transformed data with the prediction.
 
 With the prediction engine set up, a call to `Predict` is all you need to make a single prediction. The prediction value is then available in the `Score` property.
 
@@ -81,7 +81,7 @@ And this is the output I get:
 ![Using The Model To Make A Prediction](../img/prediction.jpg)
 { .img-fluid .mb-4 }
 
-I get a predicted median house value of **$143,265**.
+I get a predicted median house value of **$124,180**.
 
 What prediction did you get? Try changing the input data to see how this affects the predicted house value. Do the changes in prediction value make sense to you?
 { .homework }

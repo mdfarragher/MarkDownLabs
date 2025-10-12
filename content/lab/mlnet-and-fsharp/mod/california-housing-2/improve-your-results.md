@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 50
 ---
 
-# Improve Your Results
-
 There are many factors that influence the quality of your model predictions, including how you process the dataset, which regression algorithm you pick, and how you configure the training hyperparameters.
 
 Here are a couple of things you could do to improve your model:

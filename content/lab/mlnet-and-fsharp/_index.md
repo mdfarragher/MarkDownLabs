@@ -16,4 +16,4 @@ This lab will quickly bring you up to speed with Microsoft’s ML.NET machine le
 
 In the lab, you will be using AI agents to generate some of the source code. I'll provide you with prompt suggestions and help you check the quality of the generated soure code and refactor it where needed. You'll build valuable experience creating F# machine learning apps with AI.
 
-As you progress through the material, you’ll design, train, and evaluate sophisticated machine learning models directly on your own computer using F# and the MLNET machine learning library.
+As you progress through the material, you’ll design, train, and evaluate sophisticated machine learning models directly on your own computer using F# and the ML.NET machine learning library.

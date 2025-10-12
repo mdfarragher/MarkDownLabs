@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 30
 ---
 
-# Save And Load The Model
-
 When you have a machine learning model with good prediction quality, you may want to save the model to a file so that you can easily use it later.
 
 Saving a model will export all of the internal model weights, which represent the knowledge the model has gathered during the training. These weights are just a series of numbers, and saving these numbers to a file safeguards this knowledge and makes it available for later use.
@@ -29,7 +27,7 @@ Your agent should generate the following code:
 ```fsharp
 // Save the trained model to a file
 let modelPath = Path.Combine(Directory.GetCurrentDirectory(), "CaliforniaHousingModel.zip")
-mlContext.Model.Save(model, trainingData.Schema, modelPath)
+mlContext.Model.Save(regressionModel, transformedData.Schema, modelPath)
 ```
 
 Saving a model is super easy. The `Save` method takes three arguments, a model instance, the dataset schema, and the path to save the weights to.
@@ -56,7 +54,7 @@ Your AI agent will discover that ONNX is not supported in ML.NET and requires a 
 
 _"It seems that the ConvertToOnnx method is not available in the current ML.NET version or setup. To save the model in ONNX format, you may need to use the Microsoft.ML.OnnxConverter package."_
 
-And then your agent will execute the following command:
+And then your agent will ask to execute the following command:
 
 ```bash
 dotnet add package Microsoft.ML.OnnxConverter
@@ -71,14 +69,14 @@ The code to save the model as an ONNX file looks like this:
 
 ```fsharp
 // Save the trained model to a file in the ONNX format
-let onnxModelPath = Path.Combine(Directory.GetCurrentDirectory(), "CaliforniaHousingModel.onnx")
-use stream = File.Create(onnxModelPath)
-mlContext.Model.ConvertToOnnx(model, trainingData, stream)
+let onnxPath = Path.Combine(Directory.GetCurrentDirectory(), "CaliforniaHousingModel.onnx")
+let onnxStream = File.Create(onnxPath)
+mlContext.Model.ConvertToOnnx(regressionModel, trainData, onnxStream)
 ```
 
-The official Microsoft documentation for saving a model in the ONNX format is here:
+Technically we should have used the `use` keyword to assign `onnxStream`, to make sure that the stream gets disposed as soon as possible. But this is not allowed in F# modules, so we have to use `let` instead. The stream will be disposed when the app terminates.
 
-https://learn.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/save-load-machine-learning-models-ml-net
+If you're interested. the Microsoft documentation for saving a model in the ONNX format is here: https://learn.microsoft.com/en-us/dotnet/machine-learning/how-to-guides/save-load-machine-learning-models-ml-net
 
 #### Loading The Model
 
@@ -96,12 +94,14 @@ This will add a query to your app, and based on your decision, it will either tr
 The code to load a model from a file looks like this:
 
 ```fsharp
-// Load the model from a file
+// Load the model
 let modelPath = Path.Combine(Directory.GetCurrentDirectory(), "CaliforniaHousingModel.zip")
-let model, modelSchema = mlContext.Model.Load(modelPath)
+let schemaRef = ref Unchecked.defaultof<DataViewSchema>
+let model = mlContext.Model.Load(modelPath, schemaRef)
+let schema = !schemaRef
 ```
 
-Again, very simple. The `Load` method imports a model from a file and expects two arguments: the path of the file, and a variable reference to save the model schema.
+The `Load` method imports a model from a file and expects two arguments: the path of the file, and a variable reference to save the model schema. So we have to initialize a reference to a `DataViewSchema` first, pass it in as the second argument to `Load`, and then dereference the schema using the `!` operator.
 
 Let's test the code. Here's what I get when I choose to train the model:
 
@@ -132,17 +132,13 @@ type RoomsPerPersonCustomAction() =
     inherit CustomMappingFactory<HousingData, TransformedHousingData>()
     
     override this.GetMapping() =
-        System.Action<HousingData, TransformedHousingData>(fun input output ->
-            output.Longitude <- input.Longitude
-            output.Latitude <- input.Latitude
-            output.HousingMedianAge <- input.HousingMedianAge
-            output.TotalRooms <- input.TotalRooms
-            output.TotalBedrooms <- input.TotalBedrooms
-            output.Population <- input.Population
-            output.Households <- input.Households
-            output.MedianIncome <- input.MedianIncome
-            output.MedianHouseValue <- input.MedianHouseValue
-            output.RoomsPerPerson <- if input.Population > 0.0f then input.TotalRooms / input.Population else 0.0f
+        Action<HousingData, TransformedHousingData>(fun input output ->
+            output.longitude <- input.longitude
+            output.latitude <- input.latitude  
+            output.housing_median_age <- input.housing_median_age
+            output.median_income <- input.median_income
+            output.median_house_value <- input.median_house_value
+            output.rooms_per_person <- if input.population > 0.0f then input.total_rooms / input.population else 0.0f
         )
 ```
 
@@ -163,19 +159,17 @@ There's one more step: I need to register the assembly that contains the custom 
 
 ```fsharp
 // Register the assembly with custom conversions
-mlContext.ComponentCatalog.RegisterAssembly(typeof<Program>.Assembly)
+mlContext.ComponentCatalog.RegisterAssembly(typeof<RoomsPerPersonCustomAction>.Assembly)
 ```
 
-The `RegisterAssembly` method registers the assembly with the custom mapping code (which is actually our main Program class), so that the `Load` method can automatically find the mapping code when it is loading the model weights from a file.
+The `RegisterAssembly` method registers the assembly with the custom mapping code, so that the `Load` method can automatically find the mapping code when it is loading the model weights from a file.
 
 It's all a bit convoluted, but with these fixes everything works.
 
 Fix any custom mapping errors in your code with the technique I just showed you.
 { .homework }
 
-By the way, Microsoft has helpful documentation about using custom mappings:
-
-https://learn.microsoft.com/en-us/dotnet/api/microsoft.ml.custommappingcatalog.custommapping
+By the way, Microsoft has helpful documentation about using custom mappings here: https://learn.microsoft.com/en-us/dotnet/api/microsoft.ml.custommappingcatalog.custommapping
 
 With these fixes in place, the app now works flawlessly when I ask it to load the model from a file:
 
