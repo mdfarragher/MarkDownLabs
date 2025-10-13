@@ -5,13 +5,11 @@ layout: "default"
 sortkey: 20
 ---
 
-# Get The Data
-
 Let's start by downloading the New York TLC dataset. 
 
 {{< encrypt >}}
 
-Grab the file from here: [Yellow Taxi Trip Records From December 2018](https://csvbase.com/mdfarragher/Taxi-Trips).
+You can download the file from here: [Yellow Taxi Trip Records From December 2018](https://csvbase.com/mdfarragher/Taxi-Trips).
 
 Download the file and save it as **Taxi-Trips.csv**.
 
@@ -51,13 +49,6 @@ Now run the following command to install the Microsoft.ML machine learning libra
 ```bash
 dotnet add package Microsoft.ML
 ```
-
-The F# syntax differs from C# in several key ways:
-- F# uses immutable values by default with `let` bindings
-- F# uses record types instead of classes for simple data structures
-- F# uses pipeline operators (`|>`) for function composition
-- F# infers types automatically in most cases
-{ .tip }
 
 Next, we're going to analyze the dataset and come up with a feature engineering plan.
 

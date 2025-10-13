@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 80
 ---
 
-# Design And Build The Transformation Pipeline
-
 Now let's start designing the ML.NET data transformation pipeline. This is the sequence of feature engineering steps that will transform the dataset into something suitable for a machine learning algorithm to train on.
 
 After completing the previous lessons, you should have a pretty good idea which feature engineering steps are needed to get this dataset ready for machine learning training.
@@ -50,15 +48,14 @@ If you decided to remove outliers, your code should look like this:
 
 ```fsharp
 // Filter outliers
-let mutable filteredData = mlContext.Data.FilterRowsByColumn(transformedData, "TripDuration", upperBound = 60.0f)
-filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "FareAmount", lowerBound = 0.01f, upperBound = 100.0f)
-filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "TripDistance", upperBound = 15.0f)
-filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "TipAmount", upperBound = 15.0f)
-filteredData <- mlContext.Data.FilterByCustomPredicate<TaxiTripWithDuration>(filteredData, 
-    Func<TaxiTripWithDuration, bool>(fun row -> row.inherited.PassengerCount >= 1))
+let mutable filteredData = mlContext.Data.FilterRowsByColumn(transformedData, "TripDuration", upperBound = 60.0)
+filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "FareAmount", lowerBound = 0.01, upperBound = 100.0)
+filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "TripDistance", upperBound = 15.0)
+filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "TipAmount", upperBound = 15.0)
+filteredData <- mlContext.Data.FilterRowsByColumn(filteredData, "PassengerCount", lowerBound = 1.0)
 ```
 
-This code uses `FilterRowsByColumn` to filter all columns of type `float`, and `FilterByCustomPredicate` to filter **PassengerCount** to exclude trips with zero passengers.
+This code uses `FilterRowsByColumn` to filter all columns to sane values.
 
 ### Normalize Features
 
@@ -67,13 +64,20 @@ If you decided to normalize any features in the dataset, it will look like this:
 ```fsharp
 // Build ML pipeline with data transformations
 let mlPipeline =
-    mlContext.Transforms.Concatenate(
-        "NumericFeatures",
-        [| "TripDistance"; "TripDuration" |])
-    // Normalize numeric features
-    .Append(mlContext.Transforms.NormalizeMinMax(
-        outputColumnName = "NormalizedFeatures",
-        inputColumnName = "NumericFeatures"))
+    EstimatorChain()
+
+        // Start with transformation pipeline
+        .Append(pipeline)
+
+        // Concatenate normalizable features
+        .Append(mlContext.Transforms.Concatenate(
+            "NumericFeatures",
+            [| "TripDistance"; "TripDuration" |]))
+
+        // Normalize features
+        .Append(mlContext.Transforms.NormalizeMinMax(
+            outputColumnName = "NormalizedFeatures",
+            inputColumnName = "NumericFeatures"))
 ```
 
 This code uses `Concatenate` to combine all numeric features (just **TripDistance** and **TripDuration** in my case) into a new combined feature called **NumericFeatures**. The `NormalizeMinMax` method then normalizes these features into a new **NormalizedFeatures** column.
@@ -101,9 +105,6 @@ If you decided to one-hot encode **RatecodeID** and **PaymentType**, you'll see 
     "PaymentTypeEncoded"))
 ```
 The `OneHotEncoding` methods perform one-hot encoding on **RatecodeID** and **PaymentType**, and **Concatenate** combines the encoded features and the **NormalizedFeatures** column set up earlier into one new column called **Features**.
-
-These code examples are reference implementations of common data transformations in ML.NET using F#. Compare the output of your AI agent with this code, and correct your agent if needed. Note how F# uses `let` for immutable bindings and `let mutable` when mutation is required.
-{ .tip }
 
 And finally, you'll see some code to actually perform the transformations and get access to the transformed data:
 

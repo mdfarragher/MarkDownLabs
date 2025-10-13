@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 30
 ---
 
-# Analyze The Data
-
 We'll begin by analyzing the New York TLC dataset and come up with a plan for feature engineering. Our goal is to map out all required data transformation steps in advance to make later machine learning training as successful as possible.
 
 {{< encrypt >}}
@@ -22,8 +20,8 @@ What to look out for:
 -    Are there any missing values, zeros, or inconsistent rows?
 -    Are the values in each column within a reasonable range?
 -    Can you spot any extremely large or very small values?
--    What's the distribution of values in columns like passenger_count or trip_distance?
--    Are tpep_pickup_datetime and tpep_dropoff_datetime useful as-is, or will they need transformation?
+-    What's the distribution of values in columns like **passenger_count** or **trip_distance**?
+-    Are **tpep_pickup_datetime** and **tpep_dropoff_datetime** useful as-is, or will they need transformation?
 
 Write down 3 insights from your analysis.
 {.homework}

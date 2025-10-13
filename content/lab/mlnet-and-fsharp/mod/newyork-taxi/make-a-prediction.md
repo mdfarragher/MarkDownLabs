@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 110
 ---
 
-# Make A Prediction
-
 To wrap up, let's use the model to make a prediction.
 
 We're going to invent a fake taxi trip in New York City. I'm going to get into a cab at Times Square and take a trip to Washington Square Park. The trip covers 2.3 miles and takes 12 minutes. What's the fare I should expect to pay?
@@ -36,25 +34,31 @@ type TaxiTripFarePrediction = {
 And then it will add code like this to make the prediction:
 
 ```fsharp
-// Create input data
-let tripData = { inherited = Unchecked.defaultof<TaxiTrip>; TripDuration = 0.0f }
+// Ask for trip details
+printfn "\nEnter taxi trip details:"
+printf "Pickup date and time: "
+let pickupDt = stdin.ReadLine() |> DateTime.Parse
+printf "Dropoff date and time: "
+let dropoffDt = stdin.ReadLine() |> DateTime.Parse
+// ... similar for other properties ...
 
-// Get user input
-printf "Trip Duration (minutes): "
-match System.Single.TryParse(Console.ReadLine()) with
-| true, tripDuration -> tripData.TripDuration <- tripDuration
-| _ -> ()
+// Create a trip record
+let trip = {
+    PickupDateTime = pickupDt
+    DropoffDateTime = dropoffDt
+    TripDistance = tripDistance
+    RatecodeID = rateCodeId
+    // ... similar for other properties ...
+}
 
-// ... (similar for other properties)
+// Create prediction engine
+let predictionEngine = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(model)
 
-// Create a prediction engine
-let predictionEngine = mlContext.Model.CreatePredictionEngine<TaxiTripWithDuration, TaxiTripFarePrediction>(model)
+// Get user input and make prediction
+let prediction = predictionEngine.Predict(trip)
 
-// Make prediction
-let prediction = predictionEngine.Predict(tripData)
-
-// Display prediction
-printfn $"Predicted Fare Amount: ${prediction.PredictedFareAmount:F2}"
+// Display the prediction
+printfn "\nThe predicted fare amount is: $%.2f" prediction.PredictedFareAmount
 ```
 
 The `CreatePredictionEngine` method sets up a prediction engine. The two type arguments are the input data record type and the record type to hold the prediction.
@@ -63,7 +67,8 @@ With the prediction engine set up, a call to `Predict` is all you need to make a
 
 Let's try this for the fake trip I took earlier. Here is the data you need to enter:
 
-- Trip duration = 12 minutes
+- Pickup date and time = 2018-12-01 00:10:00
+- Dropoff date and time = 2018-12-01 00:22:00
 - Trip distance = 2.3 miles
 - Rate code ID = 1 (standard rate)
 - Payment type = 1 (credit card)
@@ -73,7 +78,7 @@ And this is the output I get:
 ![Using The Model To Make A Prediction](../img/prediction.jpg)
 { .img-fluid .mb-4 }
 
-I get a predicted fare amount of **$10.70**.
+I get a predicted fare amount of **$10.63**.
 
 What prediction did you get? Try changing the input data to see how this affects the predicted fare amount. Do the changes in prediction value make sense to you?
 { .homework }

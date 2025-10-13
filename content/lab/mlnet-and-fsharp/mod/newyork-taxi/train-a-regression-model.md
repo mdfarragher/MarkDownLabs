@@ -5,9 +5,7 @@ layout: "default"
 sortkey: 90
 ---
 
-# Train A Regression Model
-
-We're going to continue with the code we wrote in the previous lab. That F# application set up an ML.NET pipeline to load the New York TLC dataset and clean up the data using several feature engineering techniques.
+In the previous lesson, we built an F# application that sets up an ML.NET pipeline to load the New York TLC dataset and clean up the data using several feature engineering techniques.
 
 So all we need to do is append a few command to the end of the pipeline to train and evaluate a regression model on the data.
 
@@ -26,7 +24,7 @@ You should get the following code:
 
 ```fsharp
 // Split the data into training (80%) and testing (20%) datasets
-let dataSplit = mlContext.Data.TrainTestSplit(transformedDataWithFeatures, testFraction = 0.2)
+let dataSplit = mlContext.Data.TrainTestSplit(filteredData, testFraction = 0.2)
 let trainingData = dataSplit.TrainSet
 let testingData = dataSplit.TestSet
 ```
@@ -52,11 +50,12 @@ You should now see the SDCA algorithm at the end of your pipeline:
 And the `Fit` and `Transform` code should now look like this:
 
 ```fsharp
-// Train the model on the data
+// Train the model and generate predictions
 let model = mlPipeline.Fit(trainingData)
+let predictions = model.Transform(testingData)
 ```
 
-This code trains the model on the 80% training data partition.
+This code trains the model on the 80% training data partition and then generates predictions for the 20% of testing data.
 
 In the next lesson, we'll calculate the prediction evaluation metrics to find out how good the model is at predicting taxi fares.
 

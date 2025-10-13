@@ -5,9 +5,7 @@ layout: "default"
 sortkey: 70
 ---
 
-# Plot The Scatterplot Matrix
-
-In data science, there is a visualisation type called the scatterplot matrix which shows a the relationship of every dataset column to every other column. The visualisation can be used to quickly determine of there is a linear or semi-linear relationship between a feature and the label. 
+In data science, there is a visualisation type called the scatterplot matrix which shows a the relationship of every dataset column to every other column. The visualisation can be used to quickly determine if there is a linear or semi-linear relationship between a feature and the label. 
 
 In the previous lesson, we discovered that **FareAmount** is the best candidate for the label and that **TripDuration**, **TripDistance** and **RateCodeID** are strongly correlated with the label.
 
@@ -17,17 +15,17 @@ In this lesson, we're going to generate a scatterplot matrix that shows the rela
 
 #### Create a Scatterplot Matrix
 
-We'll start by setting up our top-level code just like with the Pearson correlation matrix. Add the following code to the main program method:
+We'll start by setting up our top-level code just like with the Pearson correlation matrix. Add the following code to the main program:
 
 ```fsharp
 // column names to plot
 let scatterPlotColumns = [| "TripDuration"; "TripDistance"; "RatecodeID"; "FareAmount" |]
 
 // plot scatterplot matrix
-let smplot = PlotScatterplotMatrix<TaxiTripWithDuration>(taxiTrips, scatterPlotColumns)
+let smplot = PlotScatterplotMatrix<TaxiTripWithDuration> taxiTripsWithDuration scatterPlotColumns
 
 // Save the plot to a file
-smplot.SavePng("scatterplot-matrix.png", 1900, 1200)
+smplot.SavePng("scatterplot-matrix.png", 1900, 1200) |> ignore
 ```
 
 The `PlotScatterplotMatrix` method is going to assemble a `Multiplot` using individual scatter plots, just like we did with the histogram grid. So we can simply copy and paste code from the `HistogramUtils` class and tweak it a little, like this:
@@ -41,7 +39,7 @@ let PlotScatterplotMatrix<'T> (data: 'T list) (columnNames: string[]) =
 
     for rowName in columnNames do
         for colName in columnNames do
-            let plot = PlotScatter<'T>(data, colName, rowName)
+            let plot = PlotScatter<'T> data colName rowName
             grid.AddPlot(plot) |> ignore
 
     grid
@@ -64,7 +62,7 @@ let PlotScatter<'T> (data: 'T list) (colName: string) (rowName: string) =
     let rowValues = data |> List.map (fun h -> Convert.ToDouble(rowProp.GetValue(h))) |> Array.ofList
 
     // generate scatterplot
-    let plt = Plot()
+    let plt = new Plot()
     plt.Add.ScatterPoints(colValues, rowValues) |> ignore
     plt.XLabel(colName)
     plt.YLabel(rowName)
@@ -99,6 +97,15 @@ And simply add this:
 let filteredData2 = mlContext.Data.FilterRowsByColumn(filteredData, "FareAmount", lowerBound = 0.0, upperBound = 100.0)
 ```
 
+And then make sure the next line in your app loads `taxiTripsWithDuration` using the `filteredData2` dataview, like this:
+
+```fsharp
+// Extract all TaxiTrip instances with properties populated
+let taxiTripsWithDuration = 
+    mlContext.Data.CreateEnumerable<TaxiTripWithDuration>(filteredData2, reuseRowObject = false)
+    |> Seq.toList
+```
+
 And with that, your scatterplot matrix should now look like this:
 
 ![Scatterplot Matrix](../img/scatterplot-matrix-2.png)
@@ -123,9 +130,7 @@ In Visual Studio Code, select the code that declares the `PlotScatterplotMatrix`
 
 This will produce a new module file called `ScatterUtils`, with all of the code for creating and plotting the scatterplot matrix. We can now use this module in other projects.
 
-If you get stuck or want to save some time, feel free to download my completed ScatterUtils class from Codeberg and use it in your own project:
-
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction/ScatterUtils.cs
+If you get stuck or want to save some time, feel free to download my completed ScatterUtils class from Codeberg and use it in your own project: https://codeberg.org/mdft/ml-mlnet-fsharp/src/branch/main/TaxiFarePrediction/ScatterUtils.fs
 
 
 #### Summary

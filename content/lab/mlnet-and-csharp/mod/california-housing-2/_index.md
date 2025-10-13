@@ -1,5 +1,5 @@
 ---
-title: "3. Predct House Prices"
+title: "3. Predict House Prices"
 description: "Predict house prices in California neighborhoods"
 type: "mod"
 layout: "single"

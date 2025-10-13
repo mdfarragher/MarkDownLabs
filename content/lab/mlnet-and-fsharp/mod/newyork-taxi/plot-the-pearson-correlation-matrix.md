@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 60
 ---
 
-# Plot The Pearson Correlation Matrix
-
 It's very easy to calculate and plot the correlation matrix for the New York TLC dataset, because we can use the **CorrelationUtils** helper class from the previous lab. The class is completely reusable and will work on any dataset.
 
 Let's see if our AI agent is smart enough to import code from another project.
@@ -17,7 +15,7 @@ Let's see if our AI agent is smart enough to import code from another project.
 
 For the next prompt, you'll need the raw url of the CorrelationUtils class you created in the previous lab. We will ask the agent to import the class into our current project.
 
-I pushed the class to a repository on Codeberg, so my url is: https://codeberg.org/mdft/ml-mlnet-csharp/raw/branch/main/CaliforniaHousing/CorrelationUtils.cs. Here is the prompt I used:
+I pushed the class to a repository on Codeberg, so my url is: https://codeberg.org/mdft/ml-mlnet-fsharp/raw/branch/main/CaliforniaHousing/CorrelationUtils.fs. Here is the prompt I used:
 
 "Copy the entire CorrelationUtils module from this repository: codeberg.org/mdft/ml-mlnet-fsharp/raw/branch/main/CaliforniaHousing/CorrelationUtils.fs. Add the module to this project."
 { .prompt }
@@ -33,29 +31,26 @@ That should fix any Intellisense errors in your code. Now we can simply add call
 
 #### Calculate and Plot the Correlation Matrix
 
-In your main program class, locate the following code snippet:
+In your main program file, add the following code snippet:
 
 ```fsharp
-// get column names, skip row id and non-numeric columns
-let columnNames = 
-    typeof<TaxiTripWithDuration>.GetProperties()
-    |> Array.filter (fun p -> p.Name <> "RowID" && 
-                             (p.PropertyType = typeof<float32> || p.PropertyType = typeof<int>))
-    |> Array.map (fun p -> p.Name)
-```
+// Add "TripDuration" to columnNames array
+let columnNamesWithDuration = Array.insertAt 0 "TripDuration" columnNames
 
-And then put this code right underneath it:
-
-```fsharp
 // Calculate the correlation matrix
-let matrix = CorrelationUtils.CalculateCorrelationMatrix<TaxiTripWithDuration>(taxiTrips, columnNames)
+printfn "Calculating correlation matrix..."
+let matrix = CalculateCorrelationMatrix<TaxiTripWithDuration> (taxiTripsWithDuration |> Seq.toArray) columnNamesWithDuration
 
 // plot correlation matrix
-let plot = CorrelationUtils.PlotCorrelationMatrix(matrix, columnNames)
+printfn "Plotting correlation matrix..."
+let corrPlot = PlotCorrelationMatrix matrix columnNamesWithDuration
 
 // Save the plot to a file
-plot.SavePng("correlation-heatmap.png", 900, 800)
+printfn "Saving correlation matrix..."
+corrPlot.SavePng("correlation-heatmap.png", 900, 800) |> ignore
 ```
+
+This code creates a `columnNamesWithDuration` array that includes the new **TripDuration** column. Then it calls `CalculateCorrelationMatrix` and `PlotCorrelationMatrix` to calculate and plot the correlation matrix.
 
 And that's it! That should be enough to calculate and plot the Pearson correlation matrix, complete with the new **TripDuration** column.
 

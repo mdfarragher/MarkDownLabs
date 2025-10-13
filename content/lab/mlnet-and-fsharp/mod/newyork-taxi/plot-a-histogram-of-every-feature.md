@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 40
 ---
 
-# Plot A Histogram Of Every Feature
-
 Before you build a machine learning model, it's important to understand your data visually. Just looking at the numbers, like you did in the previous lesson, may not be enough. A good chart can clearly reveal patterns in the dataset.
 
 In this section, you'll going to generate code to plot a histogram for every (interesting) feature in the dataset.
@@ -80,8 +78,6 @@ This implementation is by the book, and exactly what we want to see in auto-gene
 This is what the TaxiTrip class looks like:
 
 ```fsharp
-open Microsoft.ML.Data
-
 [<CLIMutable>]
 type TaxiTrip = {
     [<LoadColumn(4)>]
@@ -99,14 +95,14 @@ let histogram = ScottPlot.Statistics.Histogram.WithBinCount(20,
     passengerCounts |> Array.map float)
 
 // Generate histogram using ScottPlot
-let plt = Plot()
+let plt = new Plot()
 plt.Add.Bars(histogram.Bins, histogram.Counts) |> ignore
 plt.Title("Passenger Count Histogram")
 plt.XLabel("Passenger Count")
 plt.YLabel("Frequency")
 
 // Save the plot
-plt.SavePng("PassengerCountHistogram.png", 600, 400)
+plt.SavePng("PassengerCountHistogram.png", 600, 400) |> ignore
 ```
 
 Let's look at the histogram:
@@ -131,15 +127,14 @@ Now let's modify the code to generate histograms for all the columns in the data
 The agent will extend the `TaxiTrip` class with new properties for each dataset column:
 
 ```fsharp
-open System
-
+// Type to represent one taxi trip
 [<CLIMutable>]
 type TaxiTrip = {
     [<LoadColumn(0)>] RowID: int
     [<LoadColumn(1)>] VendorID: int
     [<LoadColumn(2)>] PickupDateTime: DateTime
     [<LoadColumn(3)>] DropoffDateTime: DateTime
-    [<LoadColumn(4)>] PassengerCount: int
+    [<LoadColumn(4)>] PassengerCount: float32
     [<LoadColumn(5)>] TripDistance: float32
     [<LoadColumn(6)>] RatecodeID: int
     [<LoadColumn(7)>] StoreAndFwdFlag: string
@@ -158,16 +153,50 @@ type TaxiTrip = {
 
 Now we're going to use the same generic and reusable code scaffold we used for the Pearson correlation matrix in the previous lab module. We will use reflection to get the list of property names, and then use a generic helper method to create a histogram for that property.
 
-Add the following code right after the data loading code, but before the plotting code:
+First, modify the code that loads `passengerCounts` into this:
 
 ```fsharp
-open System.Reflection
+// Extract passenger_count column
+let taxiTrips = 
+    mlContext.Data.CreateEnumerable<TaxiTrip>(data, reuseRowObject = false)
+    |> Seq.toList
+```
 
+So, instead of loading just the **PassengerCount** column, we now load entire taxi trip records into `taxiTrips` and convert the enumeration to a list. 
+
+Next, add the following helper function to plot a single histogram:
+
+```fsharp
+let PlotHistogram<'T> (data: 'T list) (columnName: string) =
+    
+    // get all column values as doubles
+    let prop = typeof<'T>.GetProperty(columnName)
+    let values = 
+        data 
+        |> List.map (fun t -> Convert.ToDouble(prop.GetValue(t))) 
+        |> Array.ofList
+
+    // Create histogram data
+    let histogram = ScottPlot.Statistics.Histogram.WithBinCount(50, values)
+
+    // Generate histogram using ScottPlot
+    let plt = new Plot()
+    plt.Add.Bars(histogram.Bins, histogram.Counts) |> ignore
+    plt.XLabel(columnName)
+    plt.YLabel("Frequency")
+
+    plt
+```
+
+This `PlotHistogram` function uses reflection to create a `double[]` array of the dataset column specified by `columnName`, and then creates a histogram from this data and returns it as a new plot. 
+
+And finally, add the following code to loop over each dataset column, calculate individual histograms for each column, and assemble the histograms into a grid:
+
+```fsharp
 // get column names, skip row id and non-numeric columns
 let columnNames = 
     typeof<TaxiTrip>.GetProperties()
-    |> Array.filter (fun p -> p.Name <> "RowID" && 
-                             (p.PropertyType = typeof<float32> || p.PropertyType = typeof<int>))
+    |> Array.filter (fun p -> p.Name <> "RowID" && (p.PropertyType = typeof<float32> || p.PropertyType = typeof<int>))
     |> Array.map (fun p -> p.Name)
 
 // set up a 4x4 grid of plots
@@ -177,41 +206,14 @@ grid.Layout <- MultiplotLayouts.Grid(columns = 4, rows = 4)
 
 // generate histograms
 for columnName in columnNames do
-    let plot = PlotHistogram<TaxiTrip>(taxiTrips, columnName)
+    let plot = PlotHistogram<TaxiTrip> taxiTrips columnName
     grid.AddPlot(plot) |> ignore
 
 // save the grid
-grid.SavePng("histograms.png", 1900, 1280)
+grid.SavePng("histograms.png", 1900, 1280) |> ignore
 ```
 
-This won't compile, because we don't have the `taxiTrips` variable yet, and the `PlotHistogram` method doesn't exist yet. So let's fix those issues one by one. Enter the following prompt:
-
-"Change the code that calls CreateEnumerable so that it produces a list of TaxiTrip instances with each field populated. Put the list in a variable called taxiTrips."
-{ .prompt }
-
-That should fix the data loading code and give us a `taxiTrips` variable which is a populated `List<TaxiTrip>`.
-
-Now let's add the `PlotHistogram` method by hand. We already have working histogram code, we just need to make it reusable by adding a little bit of reflection. You'll want something like this:
-
-```fsharp
-let PlotHistogram<'T> (data: 'T list) (columnName: string) =
-    // get all column values as doubles
-    let prop = typeof<'T>.GetProperty(columnName)
-    let values = data |> List.map (fun t -> Convert.ToDouble(prop.GetValue(t))) |> Array.ofList
-
-    // Create histogram data
-    let histogram = ScottPlot.Statistics.Histogram.WithBinCount(50, values)
-
-    // Generate histogram using ScottPlot
-    let plt = Plot()
-    plt.Add.Bars(histogram.Bins, histogram.Counts) |> ignore
-    plt.XLabel(columnName)
-    plt.YLabel("Frequency")
-
-    plt
-```
-
-This function uses reflection to create a `double[]` array of the dataset column specified by `columnName`, and then creates a histogram from this data and returns it as a new plot. The code in the main program assembles these plots into a nice 4x4 grid. 
+This code uses reflection to collect every `TaxiTrip` property of type `float32` or `int` that is not called **RowID**, and plots histograms for each of them. 
 
 When you run the app, you should get something like this:
 
@@ -246,20 +248,18 @@ And now that we have these two methods, we can move them both to a utility class
 
 This will produce a new module file called `HistogramUtils`, with all of the code for creating and plotting the grid of histograms for any given feature. We can now use this module in other projects.
 
-And if you want to clean up your code and make it as side-effect-free as possible, you can edit `PlotAllHistograms` and have it return the `Multiplot` grid instance. You can then save the grid in the main program class instead. Your main calling code will then look like this:
+And if you want to clean up your code and make it as side-effect-free as possible, you can edit `PlotAllHistograms` and have it return the `Multiplot` grid instance. You can then save the grid in the main program instead. Your main calling code will then look like this:
 
 ```fsharp
-// calculate the histogram grid
-let grid = HistogramUtils.PlotAllHistograms<TaxiTrip>(taxiTrips, columnNames, columns = 5, rows = 4)
+// Calculate histogram grid
+let grid = PlotAllHistograms taxiTrips columnNames 4 4
 
-// save the grid
-grid.SavePng("histograms.png", 1900, 1280)
+// Save histogram grid
+grid.SavePng("histograms.png", 1900, 1280) |> ignore
 ```
 
 Perfect!
 
-If you get stuck or want to save some time, feel free to download my completed HistogramUtils class from Codeberg and use it in your own project:
-
-https://codeberg.org/mdft/ml-mlnet-csharp/src/branch/main/TaxiFarePrediction/HistogramUtils.cs
+If you get stuck or want to save some time, feel free to download my completed HistogramUtils module from Codeberg and use it in your own project: https://codeberg.org/mdft/ml-mlnet-fsharp/src/branch/main/TaxiFarePrediction/HistogramUtils.fs
 
 {{< /encrypt >}}

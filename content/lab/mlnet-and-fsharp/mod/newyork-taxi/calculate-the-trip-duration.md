@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 50
 ---
 
-# Calculate The Trip Duration
-
 In the New York TLC dataset, we have a set of columns that at first glance appear to be highly correlated: 
 
 - **tpep_pickup_datetime**
@@ -33,7 +31,22 @@ You may have to prod your AI agent a few times to generate the correct code. We 
 let pipeline = 
     mlContext.Transforms.CustomMapping<TaxiTrip, TaxiTripWithDuration>(
         Action<TaxiTrip, TaxiTripWithDuration>(fun input output ->
-            output.inherited <- input
+            output.RowID <- input.RowID
+            output.VendorID <- input.VendorID
+            output.PassengerCount <- input.PassengerCount
+            output.TripDistance <- input.TripDistance
+            output.RatecodeID <- input.RatecodeID
+            output.StoreAndFwdFlag <- input.StoreAndFwdFlag
+            output.PULocationID <- input.PULocationID
+            output.DOLocationID <- input.DOLocationID
+            output.PaymentType <- input.PaymentType
+            output.FareAmount <- input.FareAmount
+            output.Extra <- input.Extra
+            output.MtaTax <- input.MtaTax
+            output.TipAmount <- input.TipAmount
+            output.TollsAmount <- input.TollsAmount
+            output.ImprovementSurcharge <- input.ImprovementSurcharge
+            output.TotalAmount <- input.TotalAmount
             output.TripDuration <- float32 (input.DropoffDateTime - input.PickupDateTime).TotalMinutes
         ),
         contractName = null)
@@ -42,9 +55,9 @@ let pipeline =
 let transformedData = pipeline.Fit(data).Transform(data)
 
 // Extract all TaxiTrip instances with properties populated
-let taxiTrips = 
+let taxiTripsWithDuration = 
     mlContext.Data.CreateEnumerable<TaxiTripWithDuration>(transformedData, reuseRowObject = false)
-    |> List.ofSeq
+    |> Seq.toList
 ```
 
 Note the last line of the mapping which calculates the trip duration in minutes. Then a call to `Fit` runs the machine learning pipeline and produces `transformedData` (a dataview). And finally, a call to `CreateEnumerable` converts the dataview to a list of `TaxiTripWithDuration` objects.  
@@ -55,10 +68,26 @@ Note that we are not registering an assembly for this mapping, so we won't be ab
 The `TaxiTripWithDuration` type looks like this:
 
 ```fsharp
+// Taxi trip with trip duration
 [<CLIMutable>]
 type TaxiTripWithDuration = {
-    inherited: TaxiTrip
-    TripDuration: float32
+    mutable RowID: int
+    mutable VendorID: int
+    mutable PassengerCount: float32
+    mutable TripDistance: float32
+    mutable RatecodeID: int
+    mutable StoreAndFwdFlag: string
+    mutable PULocationID: int
+    mutable DOLocationID: int
+    mutable PaymentType: int
+    mutable FareAmount: float32
+    mutable Extra: float32
+    mutable MtaTax: float32
+    mutable TipAmount: float32
+    mutable TollsAmount: float32
+    mutable ImprovementSurcharge: float32
+    mutable TotalAmount: float32
+    mutable TripDuration: float32
 }
 ```
 
@@ -66,8 +95,8 @@ With the mapping set up, it's now very easy to calculate a histogram of the new 
 
 ```fsharp
 // Plot and save histogram of trip duration
-let plot = HistogramUtils.PlotHistogram<TaxiTripWithDuration>(taxiTrips, "TripDuration")
-plot.SavePng("tripduration-histogram.png", 600, 400)
+let plot = HistogramUtils.PlotHistogram<TaxiTripWithDuration> taxiTripsWithDuration "TripDuration"
+plot.SavePng("tripduration-histogram.png", 600, 400) |> ignore
 ```
 
 When you run this code, you'll get the following histogram:
@@ -96,9 +125,9 @@ let transformedData = pipeline.Fit(data).Transform(data)
 let filteredData = mlContext.Data.FilterRowsByColumn(transformedData, "TripDuration", upperBound = 60.0)
 
 // Extract all TaxiTrip instances with properties populated
-let taxiTrips = 
+let taxiTripsWithDuration = 
     mlContext.Data.CreateEnumerable<TaxiTripWithDuration>(filteredData, reuseRowObject = false)
-    |> List.ofSeq
+    |> Seq.toList
 ```
 
 First, a call to `Fit` runs the pipeline and calculates the trip duration. Then the `FilterRowsByColumn` function filters the dataview by removing all outliers, and finally the `CreateEnumerable` function produces the list of taxi trips. 
