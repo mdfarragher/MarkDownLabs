@@ -5,8 +5,6 @@ layout: "default"
 sortkey: 120
 ---
 
-# Load The Full Dataset
-
 So far, we have been working with a subset of the New York TLC dataset. The subset contains the first 10,000 taxi trips made in the early hours of the morning on December 1st, 2018. This is not a representative subset of all the trips made in December, but it allowed us to quickly design a data transformation pipeline and train a regression model on the data.
 
 Now, let's download the full dataset. 
@@ -33,7 +31,7 @@ let parquetTrips =
     ParquetSerializer.DeserializeAsync<TaxiTrip>("yellow_tripdata_2018-12.parquet")
         .GetAwaiter()
         .GetResult()
-data <- mlContext.Data.LoadFromEnumerable(taxiTrips)
+data <- mlContext.Data.LoadFromEnumerable(parquetTrips)
 ```
 
 The `ParquetSerializer.DeserializeAsync` method will load the file and produce a list of `TaxiTrip` objects (called with `GetAwaiter` and `GetResults` so that the synchronous calling thread will block while the data is loading), and then `LoadFromEnumerable` will convert the list to a dataview. 
@@ -95,8 +93,8 @@ This code works and will load all 8.1 million trips. But now we have a new probl
 We can fix this by manually converting every `ParquetTaxiTrip` to a `TaxiTrip`, like this:
 
 ```fsharp
-// Convert data to TaxiTrip list
-let taxiTrips = 
+// Convert ParquetTaxiTrip list to TaxiTrip list
+let convertedTrips = 
     parquetTrips 
     |> Seq.map (fun p -> 
         {
@@ -104,10 +102,10 @@ let taxiTrips =
             VendorID = p.VendorID.GetValueOrDefault(0L) |> int
             PickupDateTime = p.tpep_pickup_datetime.GetValueOrDefault(DateTime.MinValue)
             DropoffDateTime = p.tpep_dropoff_datetime.GetValueOrDefault(DateTime.MinValue)
-            PassengerCount = p.passenger_count.GetValueOrDefault(0.0) |> int
+            PassengerCount = p.passenger_count.GetValueOrDefault(0.0) |> float32
             TripDistance = p.trip_distance.GetValueOrDefault(0.0) |> float32
             RatecodeID = p.RatecodeID.GetValueOrDefault(0.0) |> int
-            StoreAndFwdFlag = p.store_and_fwd_flag ?? ""
+            StoreAndFwdFlag = p.store_and_fwd_flag
             PULocationID = p.PULocationID.GetValueOrDefault(0L) |> int
             DOLocationID = p.DOLocationID.GetValueOrDefault(0L) |> int
             PaymentType = p.payment_type.GetValueOrDefault(0L) |> int
@@ -122,7 +120,7 @@ let taxiTrips =
     |> List.ofSeq
 
 // Convert list to IDataView
-data <- mlContext.Data.LoadFromEnumerable(taxiTrips)
+mlContext.Data.LoadFromEnumerable(convertedTrips)
 ```
 
 This is not very efficient code, but it's good enough for now. 
@@ -139,11 +137,11 @@ Here's what I got:
 ![Training a Regression Model on all Taxi Trips](../img/evaluate-parquet.jpg)
 {.img-fluid .mb-4}
 
-The R-squared value is **0.872** which means that the model explains 87% of the variance in the fare amount. This is quite a bit lower than the previous result of 0.992, but still a good result. It suggests that the previous model trained on 10,000 trips was indeed overfitting, and we are now looking at a more realistic result. 
+The R-squared value is **0.835** which means that the model explains 84% of the variance in the fare amount. This is quite a bit lower than the previous result of 0.972, but still a good result. It suggests that the previous model trained on 10,000 trips was indeed overfitting, and we are now looking at a more realistic result. 
 
-The mean absolute error (MAE) is **$2.818**. It increased sevenfold compared to the previous MAE of 0.425. In this dataset we have a lot more variety: long trips, airport trips, surcharges, and possibly mislabeled fares. This naturally increases prediction difficulty. It's likely the model is not handling outliers, long-distance trips, or rare cases well.
+The mean absolute error (MAE) is **$1.856**. It increased fourfold compared to the previous MAE of 0.451. In this dataset we have a lot more variety: long trips, airport trips, surcharges, and possibly mislabeled fares. This naturally increases prediction difficulty. It's likely the model is not handling outliers, long-distance trips, or rare cases well.
 
-The root mean squared error (RMSE) is **$4.565**. The fact that the RMSE is twice as large as the MAE indicates that there are outliers where the model makes large errors in its prediction. This suggests that we may have to adjust our data filters for the new dataset. 
+The root mean squared error (RMSE) is **$3.232**. The fact that the RMSE is 1.7 times as large as the MAE indicates that there are outliers where the model makes large errors in its prediction. This suggests that we may have to adjust our data filters for the new dataset. 
 
 #### Conclusion 
 
