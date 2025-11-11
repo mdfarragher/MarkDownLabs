@@ -78,7 +78,7 @@ code:not(pre code) {
 }
 
 /* Special orange-underlined link */
-.warning-link {
+.warning-link, p a {
     color: black;
     font-weight: bold;
     text-decoration: underline;
