@@ -78,13 +78,17 @@ code:not(pre code) {
 }
 
 /* Special orange-underlined link */
-.warning-link, p a {
+a.warning-link, .mt-4 p a {
     color: black;
-    font-weight: bold;
     text-decoration: underline;
     text-decoration-color: #FA6915
 }
 
+/* Special orange-underlined link */
+a.warning-link:hover, .mt-4 p a:hover {
+    color: #007bff !important;
+    text-decoration-color: #007bff;
+}
 
 .section-header {
     /* text-align: center; */

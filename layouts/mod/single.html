@@ -13,9 +13,9 @@
     {{ if .Parent.Params.memberLink }}
     <div class="alert bg-white border border-gray accesskey-warning mt-3 d-none">
         <div class="d-flex align-items-center justify-content-between">
-            <p class="mb-0">You need to <a class="warning-link text-reset" href="{{ .Parent.Params.memberLink }}"><strong>subscribe to all-access membership</strong></a>
+            <p class="mb-0">You need to <a class="warning-link text-reset" href="{{ .Parent.Params.memberLink }}">subscribe to all-access membership</a>
                 {{ if .Parent.Params.courseLink }}
-                    or <a class="warning-link text-reset" href="{{ .Parent.Params.courseLink }}"><strong>buy the course</strong></a>
+                    or <a class="warning-link text-reset" href="{{ .Parent.Params.courseLink }}">buy the course</a>
                 {{ end }} 
                 to unlock this lab module.</p>
             <a class="btn btn-success btn-sm ml-3" href="{{ .Parent.Params.memberLink }}">Get Access</a>
