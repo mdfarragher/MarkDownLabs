@@ -1,13 +1,14 @@
 ---
 title: "MarkDown Labs"
-description: "Sharpen your tech skills with these practice labs"
+description: "What will you build today?"
 type: "lab"
 layout: "list"
 ---
-Hi, I'm Mark Farragher, the creator of MarkDown Labs and the author of all the labs you'll find here.
 
-These labs complement the online training courses and recorded lectures you'll find on the [MDFT Pro Academy website](https://www.mdft.academy). Each lab focuses on a specific product or technology, and will teach you how to build innovative and cutting-edge applications in a day.
+Sometimes you're just not in the mood to watch a video lesson and listen to me talk for hours about some super cool subject. You just want to fire up your software development environment and get your hands dirty writing raw code. I get it.
 
-I built MarkDown Labs as a place to showcase and share all the cool tech experiments and demo applications I've developed during my long career. My goal with these labs is to make your learning journey easy and fun. So please dive in, challenge yourself, and see what you can build in one day!
+That's why I created **MarkDown Labs**. Here, you will find a large selection of labs that complement the training courses and recorded lectures on the [MDFT Pro Academy](https://www.mdft.academy) website. Each lab explores a specific product or technology and demonstrates how to master a specific skill or build an app in a day.
 
-Ready to get started?
+My goal with these labs is to make your learning journey easy and fun. What will you build today?
+
+[All-Access](https://www.mdft.academy/membership) members have full access to every lab on this site. 
