@@ -3,9 +3,8 @@ title: "Supervised Machine Learning with C# and Tensorflow.NET"
 description: "Build Machine Learning Applications In C# With The Tensorflow.NET Library"
 type: "lab"
 layout: "single"
-image: lab-tensorflow-csharp.jpg
-hideLab: false
-sortkey: 50
+image: lab-csharp-and-tensorflow.jpg
+sortkey: 50 
 hideLab: true
 
 courseName: "Supervised Machine Learning with C# and Tensorflow.NET"

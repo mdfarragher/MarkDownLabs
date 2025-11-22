@@ -3,7 +3,7 @@ title: "Supervised Machine Learning with C# and Accord.NET"
 description: "Build Machine Learning Applications In C# With The Accord.NET Library"
 type: "lab"
 layout: "single"
-image: lab-mlnet-csharp.jpg
+image: lab-csharp-and-accord.jpg
 sortkey: 30
 hideLab: true
 

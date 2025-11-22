@@ -3,7 +3,7 @@ title: "Supervised Machine Learning with C# and ML.NET"
 description: "Build Machine Learning Applications In C# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
-image: lab-mlnet-csharp.jpg
+image: lab-csharp-and-mlnet.jpg
 sortkey: 10
 
 courseName: "Supervised Machine Learning with C# and ML.NET"

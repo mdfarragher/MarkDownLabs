@@ -3,7 +3,7 @@ title: "Supervised Machine Learning with C# and CNTK"
 description: "Build Machine Learning Applications In C# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
-image: lab-cntk-csharp.jpg
+image: lab-csharp-and-cntk.jpg
 sortkey: 40
 hideLab: true
 

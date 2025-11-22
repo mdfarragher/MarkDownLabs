@@ -3,8 +3,7 @@ title: "Supervised Machine Learning with C# and Keras.NET"
 description: "Build Machine Learning Applications In C# With The Keras.NET Library"
 type: "lab"
 layout: "single"
-image: lab-tensorflow-csharp.jpg
-hideLab: false
+image: lab-csharp-and-keras.jpg
 sortkey: 60
 hideLab: true
 

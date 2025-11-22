@@ -3,7 +3,7 @@ title: "Supervised Machine Learning with AutoML and ML.NET CLI"
 description: "Build Cloud-Scale Machine Learning Applications In Azure Machine Learning Studio"
 type: "lab"
 layout: "single"
-image: lab-azure-mlstudio.jpg
+image: lab-azure-automl.jpg
 sortkey: 80
 hideLab: true
 

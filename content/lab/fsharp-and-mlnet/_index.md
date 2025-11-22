@@ -3,8 +3,7 @@ title: "Supervised Machine Learning with F# and ML.NET"
 description: "Build Machine Learning Applications In F# With The Microsoft ML.NET Library"
 type: "lab"
 layout: "single"
-image: lab-mlnet-fsharp.jpg
-hideLab: false
+image: lab-fsharp-and-mlnet.jpg
 sortkey: 20
 
 courseName: "Machine Learning with F# and ML.NET"
